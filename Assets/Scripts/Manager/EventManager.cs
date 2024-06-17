@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 
@@ -10,6 +9,7 @@ public class EventData
     private string _eventName;
     private string _callbackName;
     private EventCallback _callback;
+    private bool _isDisposable;
 
 
     public string EventName { get => _eventName; set => _eventName = value; }
@@ -19,13 +19,15 @@ public class EventData
     public object Source { get => _source; set => _source = value; }
     public string CallbackName { get => _callbackName; set => _callbackName = value; }
     public EventCallback Callback { get => _callback; set => _callback = value; }
+    public bool IsDisposable { get => _isDisposable; set => _isDisposable = value; }
 
-    public EventData(string eventName, object source, string callbackName, EventCallback callback)
+    public EventData(string eventName, object source, string callbackName, EventCallback callback, bool isDisposable = false)
     {
         _eventName = eventName;
         _source = source;
         _callbackName = callbackName;
         _callback = callback;
+        _isDisposable = isDisposable;
     }
 }
 
@@ -82,57 +84,73 @@ public class EventManager : MonoSingleton<EventManager>
         }
     }
 
-    public static void RemoveEvent(string eventName, Guid guid, EventCallback eventCallback)
+    public static void RemoveEvent(EventData eventData)
     {
-        if (!_eventDic.ContainsKey(eventName))
+        if (!_eventDic.ContainsKey(eventData.EventName))
         {
-            //ToDo 输出error
+            //ToDo 输出error，eventData.EventName没有注册
             return;
         }
 
-        if (!_eventDic[eventName].ContainsKey(guid))
+        if (!_eventDic[eventData.EventName].ContainsKey(eventData.Source))
         {
-            //ToDo 输出error
+            //ToDo 输出error，eventData.Source没有注册
             return;
         }
 
-        _eventDic[eventName].Remove(guid);
-
-        if (_eventDic[eventName] == null)
+        if (!_eventDic[eventData.EventName][eventData.Source].ContainsKey(eventData.CallbackName))
         {
-            _eventDic.Remove(eventName);
+            //ToDo 输出error，eventData.CallbackName没有注册
+            return;
         }
 
-        eventCallback?.Invoke(null);
+        _eventDic[eventData.EventName][eventData.Source].Remove(eventData.CallbackName);
+
+        if (_eventDic[eventData.EventName][eventData.Source] == null)
+        {
+            _eventDic[eventData.EventName].Remove(eventData.Source);
+            if (_eventDic[eventData.EventName] == null)
+            {
+                _eventDic.Remove(eventData.EventName);
+            }
+        }
+
+        //执行移除事件回调
+        eventData.Callback?.Invoke(null);
     }
 
-    public static void RemoveEvent(string eventName)
+    public static void RemoveEvent(string eventName, EventCallback eventCallback)
     {
         if (!_eventDic.ContainsKey(eventName))
         {
-            //ToDo 输出error
+            //ToDo 输出error，eventData.EventName没有注册
         }
         else
         {
             _eventDic.Remove(eventName);
+
+            eventCallback?.Invoke(null);
         }
     }
 
-    public static void DispatchEvent(string eventName, Guid? guid, params object[] args)
+    public static void DispatchEvent(EventData eventData, params object[] args)
     {
-        if (String.IsNullOrEmpty(eventName))
+        if (eventData.Source == null)
         {
-            eventName = _globalName;
+            eventData.Source = _globalName;
         }
-        if (!_eventDic.ContainsKey(eventName))
+        if (!_eventDic.ContainsKey(eventData.EventName))
         {
-            //ToDo 输出error
+            //ToDo 输出error，eventData.EventName没有注册
             return;
         }
 
-        foreach (var item in _eventDic[eventName])
+        foreach (var sourceItem in _eventDic[eventData.EventName])
         {
-            //item.Value.Invoke(args);
+            foreach (var eventItem in sourceItem.Value)
+            {
+                eventItem.Value?.Invoke(args);
+            }
         }
     }
 }
