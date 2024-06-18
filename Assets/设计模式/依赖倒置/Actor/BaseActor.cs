@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseActor : MonoBehaviour
+public class BaseActor
 {
     private Dictionary<string, IAction> _actions = new();
 
@@ -22,6 +22,7 @@ public class BaseActor : MonoBehaviour
         else
         {
             _actions.Add(actionName, action);
+            Debug.Log($"¡¾{actionName}¡¿ÒÑÌí¼Ó");
         }
     }
 
