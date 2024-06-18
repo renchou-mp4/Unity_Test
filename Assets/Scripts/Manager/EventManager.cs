@@ -21,7 +21,7 @@ public class EventData
     public EventCallback Callback { get => _callback; set => _callback = value; }
     public bool IsDisposable { get => _isDisposable; set => _isDisposable = value; }
 
-    public EventData(string eventName, object source, string callbackName, EventCallback callback, bool isDisposable = false)
+    public EventData(string eventName, object source = null, string callbackName = null, EventCallback callback = null, bool isDisposable = false)
     {
         _eventName = eventName;
         _source = source;
