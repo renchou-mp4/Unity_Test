@@ -2,10 +2,19 @@ using QFramework;
 
 public class CounterModel : AbstractModel
 {
-    public int Count;
+    public BindableProperty<int> mCount = new BindableProperty<int>();
+
+    private Storage _storage;
 
     protected override void OnInit()
     {
-        Count = 0;
+        _storage = this.GetUtility<Storage>();
+
+        mCount.Value = _storage.LoadInt(nameof(mCount), 0);
+
+        mCount.Register((count) =>
+        {
+            _storage.SaveInt(nameof(mCount), count);
+        });
     }
 }

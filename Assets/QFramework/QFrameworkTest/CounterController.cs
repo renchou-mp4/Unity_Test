@@ -8,7 +8,6 @@ public class CounterController : MonoBehaviour, IController
     public TextMeshProUGUI Text;
     public Button BtnIncrease;
     public Button BtnDecrease;
-    private int count = 0;
 
     private CounterModel model;
 
@@ -20,25 +19,28 @@ public class CounterController : MonoBehaviour, IController
     private void Start()
     {
         model = this.GetModel<CounterModel>();
-
         BtnIncrease.onClick.AddListener(() =>
         {
-            model.Count++;
+            this.SendCommand<IncreaseCountCommand>();
 
-            UpdateView();
         });
 
         BtnDecrease.onClick.AddListener(() =>
         {
-            model.Count--;
+            this.SendCommand<DecreaseCountCommand>();
 
-            UpdateView();
         });
+
+        this.RegisterEvent<CountChangedEvent>((e) =>
+        {
+            UpdateView();
+
+        }).UnRegisterWhenGameObjectDestroyed(gameObject);
 
     }
 
     private void UpdateView()
     {
-        Text.text = model.Count.ToString();
+        Text.text = model.mCount.Value.ToString();
     }
 }
