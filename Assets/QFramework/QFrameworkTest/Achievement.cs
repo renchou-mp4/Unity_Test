@@ -1,15 +1,20 @@
 using QFramework;
 using UnityEngine;
 
-public class Achievement : AbstractSystem
+public interface IAchievementSystem : ISystem
 {
-    private CounterModel _counterModel;
+
+}
+
+public class Achievement : AbstractSystem, IAchievementSystem
+{
+    private ICounterModel _counterModel;
 
     protected override void OnInit()
     {
-        _counterModel = this.GetModel<CounterModel>();
+        _counterModel = this.GetModel<ICounterModel>();
 
-        this.RegisterEvent<CountChangedEvent>((e) =>
+        _counterModel.mCount.Register((e) =>
         {
             if (_counterModel.mCount.Value == 5)
             {

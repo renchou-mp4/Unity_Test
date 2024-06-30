@@ -1,8 +1,13 @@
 using QFramework;
 
-public class CounterModel : AbstractModel
+public interface ICounterModel : IModel
 {
-    public BindableProperty<int> mCount = new BindableProperty<int>();
+    BindableProperty<int> mCount { get; }
+}
+
+public class CounterModel : AbstractModel, ICounterModel
+{
+    public BindableProperty<int> mCount { get; } = new();
 
     private Storage _storage;
 

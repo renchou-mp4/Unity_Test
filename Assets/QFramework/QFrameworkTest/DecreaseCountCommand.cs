@@ -4,7 +4,6 @@ public class DecreaseCountCommand : AbstractCommand
 {
     protected override void OnExecute()
     {
-        this.GetModel<CounterModel>().mCount.Value--;
-        this.SendEvent<CountChangedEvent>();
+        this.GetModel<ICounterModel>().mCount.Value--;
     }
 }

@@ -1,7 +1,13 @@
 using QFramework;
 using UnityEngine;
 
-public class Storage : IUtility
+public interface IStorage : IUtility
+{
+    void SaveInt(string key, int value);
+    int LoadInt(string key, int defaultValue = 0);
+}
+
+public class Storage : IStorage
 {
     public void SaveInt(string key, int value)
     {

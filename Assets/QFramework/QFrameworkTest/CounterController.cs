@@ -31,10 +31,9 @@ public class CounterController : MonoBehaviour, IController
 
         });
 
-        this.RegisterEvent<CountChangedEvent>((e) =>
+        model.mCount.Register(e =>
         {
             UpdateView();
-
         }).UnRegisterWhenGameObjectDestroyed(gameObject);
 
     }

@@ -4,8 +4,8 @@ public class Counter : Architecture<Counter>
 {
     protected override void Init()
     {
-        this.RegisterSystem(new Achievement());
-        this.RegisterUtility(new Storage());
-        this.RegisterModel(new CounterModel());
+        RegisterSystem<IAchievementSystem>(new Achievement());
+        RegisterModel<IModel>(new CounterModel());
+        RegisterUtility<IStorage>(new Storage());
     }
 }
