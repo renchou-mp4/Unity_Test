@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.aillieo.easy-events": {
+      "version": "https://github.com/aillieo/EasyEvent.git#upm",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "bf40becfc1237f782c307c778be82b4b861fada3"
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,
