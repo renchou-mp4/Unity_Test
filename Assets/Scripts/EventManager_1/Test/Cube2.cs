@@ -1,15 +1,13 @@
-using System;
 using UnityEngine;
 
 public class Cube2 : MonoBehaviour
 {
-    Guid guid = Guid.NewGuid();
 
     // Start is called before the first frame update
     void Start()
     {
-        EventManager.AddEvent(new EventData(EventType.Cube_Test, guid, "CallBack", CallBack));
-        EventManager.AddEvent(new EventData(EventType.Cube2_Test, guid, "CallBack", CallBack));
+        EventManager.AddEvent(new EventData(EventType.Cube_Test, "Cube2", "CallBack", CallBack));
+        EventManager.AddEvent(new EventData(EventType.Cube2_Test, "Cube2", "CallBack", CallBack));
     }
 
     // Update is called once per frame
@@ -32,7 +30,7 @@ public class Cube2 : MonoBehaviour
     {
         if (GUI.Button(new Rect(100, 500, 100, 100), "ÒÆ³ýCube2ÊÂ¼þ"))
         {
-            EventManager.RemoveEvent(new EventData(EventType.Cube2_Test, guid, "CallBack", RemoveCallBack));
+            EventManager.RemoveEvent(new EventData(EventType.Cube2_Test, "Cube2", "CallBack", RemoveCallBack));
         }
     }
 }

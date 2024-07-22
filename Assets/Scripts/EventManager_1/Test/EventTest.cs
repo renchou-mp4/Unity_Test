@@ -18,17 +18,17 @@ public class EventTest : MonoBehaviour
     {
         if (GUI.Button(new Rect(100, 100, 100, 100), "Cube事件"))
         {
-            EventManager.DispatchEvent(new EventData(EventType.Cube_Test, null), 1, 2.0f, 3d, "4");
+            EventManager.DispatchEvent(new EventData(EventType.Cube_Test, "Cube1"), 1, 2.0f, 3d, "4");
         }
 
         if (GUI.Button(new Rect(100, 200, 100, 100), "Cube1事件"))
         {
-            EventManager.DispatchEvent(new EventData(EventType.Cube1_Test, null), 1, 2.0f, 3d, "4");
+            EventManager.DispatchEvent(new EventData(EventType.Cube1_Test, "Cube1"), 1, 2.0f, 3d, "4");
         }
 
         if (GUI.Button(new Rect(100, 300, 100, 100), "Cube2事件"))
         {
-            EventManager.DispatchEvent(new EventData(EventType.Cube2_Test, null), 1, 2.0f, 3d, "4");
+            EventManager.DispatchEvent(new EventData(EventType.Cube2_Test, "Cube2"), 1, 2.0f, 3d, "4");
         }
 
         if (GUI.Button(new Rect(100, 600, 100, 100), "移除Cube事件"))
