@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 
 public delegate void EventCallback(params object[] args);
@@ -95,26 +96,38 @@ public class EventManager : MonoSingleton<EventManager>
 
         if (eventData.Source != null)
         {
-            if (!_eventDic[eventData.EventName].ContainsKey(eventData.Source))
+            if (!_eventDic[eventData.EventName][eventData.Source].ContainsKey(eventData.CallbackName))
             {
-                //ToDo 输出error，eventData.Source没有注册
+                //ToDo 输出error，eventData.CallbackName没有注册
                 return;
             }
             else
             {
-                //移除指定事件源的指定回调方法
-                if (!_eventDic[eventData.EventName][eventData.Source].ContainsKey(eventData.CallbackName))
-                {
-                    //ToDo 输出error，eventData.CallbackName没有注册
-                    return;
-                }
-                else
-                {
-                    _eventDic[eventData.EventName][eventData.Source].Remove(eventData.CallbackName);
+                //移除指定事件源的回调方法
+                _eventDic[eventData.EventName][eventData.Source].Remove(eventData.CallbackName);
 
-                    if (_eventDic[eventData.EventName][eventData.Source].Count == 0)
+                if (_eventDic[eventData.EventName][eventData.Source].Count == 0)
+                {
+                    _eventDic[eventData.EventName].Remove(eventData.Source);
+                    if (_eventDic[eventData.EventName].Count == 0)
                     {
-                        _eventDic[eventData.EventName].Remove(eventData.Source);
+                        _eventDic.Remove(eventData.EventName);
+                    }
+                }
+                return;
+            }
+        }
+        else
+        {
+            //移除所有事件源的回调方法
+            foreach (var sourceItem in _eventDic[eventData.EventName].Values)
+            {
+                if (sourceItem.Keys.Contains(eventData.CallbackName))
+                {
+                    sourceItem.Remove(eventData.CallbackName);
+                    if (sourceItem.Count == 0)
+                    {
+                        _eventDic[eventData.EventName].Remove(sourceItem);
                         if (_eventDic[eventData.EventName].Count == 0)
                         {
                             _eventDic.Remove(eventData.EventName);
@@ -122,10 +135,6 @@ public class EventManager : MonoSingleton<EventManager>
                     }
                 }
             }
-        }
-        else
-        {
-            //移除所有事件源
         }
 
 
