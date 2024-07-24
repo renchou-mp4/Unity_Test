@@ -6,8 +6,8 @@ public class Cube2 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        EventManager.AddEvent(new EventData(EventType.Cube_Test, "Cube2", "CallBack", CallBack));
-        EventManager.AddEvent(new EventData(EventType.Cube2_Test, "Cube2", "CallBack", CallBack));
+        EventManager.AddEvent(EventData.Add(EventType.Cube_Test, this.name, CallBack));
+        EventManager.AddEvent(EventData.Add(EventType.Cube2_Test, this.name, CallBack));
     }
 
     // Update is called once per frame
@@ -30,7 +30,7 @@ public class Cube2 : MonoBehaviour
     {
         if (GUI.Button(new Rect(100, 500, 100, 100), "ÒÆ³ýCube2ÊÂ¼þ"))
         {
-            EventManager.RemoveEvent(new EventData(EventType.Cube2_Test, "Cube2", "CallBack", RemoveCallBack));
+            EventManager.RemoveEvent(EventData.Remove(EventType.Cube2_Test, this.name, CallBack));
         }
     }
 }
