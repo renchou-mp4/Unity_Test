@@ -3,60 +3,6 @@ using System.Collections.Generic;
 
 public delegate void EventCallback(params object[] args);
 
-//使用struct可以减少一些GC
-public struct EventData
-{
-    private object _source;             //事件源
-    private string _eventName;
-    private EventCallback _callback;
-    private object[] _callbackArguments;
-
-
-    public string EventName { get => _eventName; set => _eventName = value; }
-
-    public object Source { get => _source; set => _source = value; }
-
-    public EventCallback Callback { get => _callback; set => _callback = value; }
-
-    public object[] CallbackArgumants { get => _callbackArguments; set => _callbackArguments = value; }
-
-    //public EventData(string eventName,
-    //    object source = null,
-    //    EventCallback callback = null)
-    //{
-    //    _eventName = eventName;
-    //    _source = source;
-    //    _callback = callback;
-    //    _callbackArguments = null;
-    //}
-
-    public EventData(string eventName,
-        object source = null,
-        EventCallback callback = null,
-        params object[] callbackArguments)
-    {
-        _eventName = eventName;
-        _source = source;
-        _callback = callback;
-        _callbackArguments = callbackArguments;
-    }
-
-    public static EventData Add(string eventName, object source, EventCallback callback)
-    {
-        return new EventData(eventName, source, callback);
-    }
-
-    public static EventData Remove(string eventName, object source, EventCallback callback = null)
-    {
-        return new EventData(eventName, source, callback);
-    }
-
-    public static EventData Dispatch(string eventName, object source, params object[] callbackArguments)
-    {
-        return new EventData(eventName, source, null, callbackArguments);
-    }
-}
-
 
 public class EventManager : MonoSingleton<EventManager>
 {
@@ -66,100 +12,100 @@ public class EventManager : MonoSingleton<EventManager>
     private static Dictionary<string, Dictionary<object, Dictionary<int, EventCallback>>> _eventDic = new();
 
 
-    public static void AddEvent(EventData eventData)
+    public static void AddEvent(object source, string eventName, EventCallback eventCallback)
     {
-        if (eventData.Source == null)
+        if (source == null)
         {
-            eventData.Source = _globalName;
+            source = _globalName;
         }
 
-        if (_eventDic.ContainsKey(eventData.EventName))
+        if (_eventDic.ContainsKey(eventName))
         {
-            if (_eventDic[eventData.EventName].ContainsKey(eventData.Source))
+            if (_eventDic[eventName].ContainsKey(source))
             {
-                int hashCode = eventData.Callback.GetHashCode();
-                if (_eventDic[eventData.EventName][eventData.Source].ContainsKey(hashCode))
+                int hashCode = eventCallback.GetHashCode();
+                if (_eventDic[eventName][source].ContainsKey(hashCode))
                 {
                     //ToDo 输出error，当前方法已注册
                     return;
                 }
                 else
                 {
-                    _eventDic[eventData.EventName][eventData.Source].Add(hashCode, eventData.Callback);
+                    _eventDic[eventName][source].Add(hashCode, eventCallback);
                 }
             }
             else
             {
-                _eventDic[eventData.EventName].Add(eventData.Source, new Dictionary<int, EventCallback>
+                _eventDic[eventName].Add(source, new Dictionary<int, EventCallback>
                 {
-                    {eventData.Callback.GetHashCode(),eventData.Callback},
+                    {eventCallback.GetHashCode(),eventCallback},
                 });
             }
         }
         else
         {
-            _eventDic.Add(eventData.EventName, new Dictionary<object, Dictionary<int, EventCallback>>
+            _eventDic.Add(eventName, new Dictionary<object, Dictionary<int, EventCallback>>
             {
-                {eventData.Source, new Dictionary<int, EventCallback>
+                {source, new Dictionary<int, EventCallback>
                 {
-                    {eventData.Callback.GetHashCode(),eventData.Callback },
+                    {eventCallback.GetHashCode(),eventCallback },
                 } },
             });
         }
     }
 
 
-    public static void RemoveEvent(EventData eventData)
+    public static void RemoveEvent(object source, string eventName, EventCallback eventCallback = null)
     {
-        if (eventData.EventName == null)
+        if (eventName == null)
         {
-            eventData.EventName = _globalName;
+            eventName = _globalName;
         }
 
-        if (!_eventDic.ContainsKey(eventData.EventName))
+        if (!_eventDic.ContainsKey(eventName))
         {
-            //ToDo 输出error，eventData.EventName没有注册
+            //ToDo 输出error，eventName没有注册
             return;
         }
 
 
-        if (eventData.Source != null)
+        if (source != null)
         {
-            if (eventData.Callback == null)
+            if (eventCallback == null)
             {
                 //移除指定事件指定事件源的所有回调方法
-                foreach (var callbackDic in _eventDic[eventData.EventName].Values)
+                foreach (var callbackDic in _eventDic[eventName].Values)
                 {
                     //主动释放内存，在内存受限时更好
                     callbackDic.Clear();
                 }
 
-                _eventDic[eventData.EventName].Remove(eventData.Source);
+                _eventDic[eventName].Remove(source);
 
-                if (_eventDic[eventData.EventName].Count == 0)
+                if (_eventDic[eventName].Count == 0)
                 {
-                    _eventDic.Remove(eventData.EventName);
+                    _eventDic.Remove(eventName);
                 }
             }
             else
             {
                 //移除指定事件指定事件源的指定回调方法
-                int hashCode = eventData.Callback.GetHashCode();
+                int hashCode = eventCallback.GetHashCode();
 
-                if (!_eventDic[eventData.EventName][eventData.Source].ContainsKey(hashCode))
+                if (!_eventDic[eventName][source].ContainsKey(hashCode))
                 {
-                    //ToDo 输出error，eventData.CallbackName没有注册
+                    //ToDo 输出error，eventCallbackName没有注册
                     return;
                 }
 
-                _eventDic[eventData.EventName][eventData.Source].Remove(hashCode);
+                _eventDic[eventName][source].Remove(hashCode);
 
-                if (_eventDic[eventData.EventName][eventData.Source].Count == 0)
+                if (_eventDic[eventName][source].Count == 0)
                 {
-                    _eventDic[eventData.EventName].Remove(eventData.Source);
-                    if (_eventDic[eventData.EventName].Count == 0)
+                    _eventDic[eventName].Remove(source);
+                    if (_eventDic[eventName].Count == 0)
                     {
-                        _eventDic.Remove(eventData.EventName);
+                        _eventDic.Remove(eventName);
                     }
                 }
             }
@@ -177,42 +123,42 @@ public class EventManager : MonoSingleton<EventManager>
                 }
                 sourceDic.Clear();
             }
-            _eventDic.Remove(eventData.EventName);
+            _eventDic.Remove(eventName);
         }
     }
 
 
-    public static void DispatchEvent(EventData eventData)
+    public static void DispatchEvent(object source, string eventName, params object[] eventCallbackArguments)
     {
-        if (!_eventDic.ContainsKey(eventData.EventName))
+        if (!_eventDic.ContainsKey(eventName))
         {
-            //ToDo 输出error，eventData.EventName没有注册
+            //ToDo 输出error，eventName没有注册
             return;
         }
 
-        if (eventData.Source == null)
+        if (source == null)
         {
-            eventData.Source = _globalName;
+            source = _globalName;
 
             //不指定事件源
-            foreach (var sourceDic in _eventDic[eventData.EventName])
+            foreach (var sourceDic in _eventDic[eventName])
             {
                 foreach (var callbackDic in sourceDic.Value)
                 {
-                    callbackDic.Value?.Invoke(eventData.CallbackArgumants);
+                    callbackDic.Value?.Invoke(eventCallbackArguments);
                 }
             }
         }
         else
         {
             //指定事件源
-            foreach (var sourceDic in _eventDic[eventData.EventName])
+            foreach (var sourceDic in _eventDic[eventName])
             {
-                if (eventData.Source == sourceDic.Key)
+                if (source == sourceDic.Key)
                 {
                     foreach (var callbackDic in sourceDic.Value)
                     {
-                        callbackDic.Value?.Invoke(eventData.CallbackArgumants);
+                        callbackDic.Value?.Invoke(eventCallbackArguments);
                     }
                 }
             }
