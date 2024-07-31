@@ -5,21 +5,14 @@ public class EventTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-        //if (EventData.Add("Cube", null, CallBack).Source == EventData.Dispatch("Cube", null).Source)
-        //{
-        //    Debug.Log("==比较：true");
-        //}
-
-        //if (eventData.Source == dispatch.Source)
-        //{
-        //    Debug.Log("equals比较：true");
-        //}
-
-
+        EventDelegate eventDelegate = new EventDelegate();
+        eventDelegate.AddListener(CallBack);
+        eventDelegate.AddListener(CallBack);
     }
-    private void CallBack(object[] objs)
-    { }
+    private void CallBack()
+    {
+        Debug.Log("eventDelegate add listener callback");
+    }
 
     // Update is called once per frame
     void Update()
