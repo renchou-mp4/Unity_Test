@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 public class EventDelegate
 {
@@ -51,32 +52,38 @@ public class EventDelegate
             return false;
         }
 
-        if (handle._action == null)
+        if (handle._callback == null)
         {
             return false;
         }
 
-        if (handle._next == handle)
-        {
-            //只有一个handle
-            _head = null;
-        }
-        else if (_head == handle)
-        {
-            //handle是head
-            _head._next._front = _head._front;
-            _head._front._next = _head._next;
-            _head = handle._next;
-        }
-        else
-        {
-            //其他情况
-            handle._front._next = handle._next;
-            handle._next._front = handle._front;
-        }
+        handle._callback = null;
 
-        handle._next = null;
-        handle._front = null;
+        if (_lockCount == 0)
+        {
+            if (handle._next == handle)
+            {
+                //只有一个handle
+                handle._next = handle._front = null;
+                _head = null;
+            }
+            else if (_head == handle)
+            {
+                //handle是head
+                _head._next._front = _head._front;
+                _head._front._next = _head._next;
+                _head = handle._next;
+            }
+            else
+            {
+                //其他情况
+                handle._front._next = handle._next;
+                handle._next._front = handle._front;
+            }
+
+            handle._next = null;
+            handle._front = null;
+        }
 
         _ListenerCount--;
 
@@ -100,9 +107,9 @@ public class EventDelegate
         EventHandle tmpHandle = _head;
         while (true)
         {
-            if (tmpHandle._action == action)
+            if (tmpHandle._callback == action)
             {
-                tmpHandle._action = null;
+                tmpHandle._callback = null;
                 _ListenerCount--;
             }
 
@@ -117,17 +124,120 @@ public class EventDelegate
         return oldListenerCount - _ListenerCount;
     }
 
-    public class EventHandle
+    public void RemoveAllListeners()
     {
-        internal EventHandle _front;
-        internal EventHandle _next;
-        internal Action _action;
-        internal EventDelegate _ower;
+        EventHandle tmpHandle = _head;
 
-        internal EventHandle(Action action, EventDelegate ower)
+        if (tmpHandle != null)
         {
-            _action = action;
-            _ower = ower;
+            while (true)
+            {
+                tmpHandle._callback = null;
+                tmpHandle = tmpHandle._next;
+                if (tmpHandle == null || tmpHandle == _head)
+                {
+                    break;
+                }
+            }
+        }
+        _ListenerCount = 0;
+    }
+
+    public void Invoke()
+    {
+        InternalInvoke(false);
+    }
+
+    public void InvokeAll()
+    {
+        InternalInvoke(true);
+    }
+
+    private void InternalInvoke(bool continueWhenException)
+    {
+        if (_head == null)
+        {
+            return;
+        }
+
+        List<Exception> exceptions = null;
+
+        _lockCount++;
+        EventHandle tmpHandle = _head;
+        while (true)
+        {
+            if (tmpHandle._callback != null)
+            {
+                try
+                {
+                    tmpHandle._callback();
+                }
+                catch (Exception e)
+                {
+                    if (!continueWhenException)
+                    {
+                        _lockCount--;
+                        throw e;
+                    }
+
+                    if (exceptions == null)
+                    {
+                        exceptions = new List<Exception>();
+                    }
+                    exceptions.Add(e);
+                }
+                finally
+                {
+                    tmpHandle = tmpHandle._next;
+                }
+
+                if (tmpHandle == null || tmpHandle == _head)
+                {
+                    break;
+                }
+            }
+            else
+            {
+                if (_lockCount == 1)
+                {
+                    if (tmpHandle._next == _head)
+                    {
+                        //只有一个handle
+                        tmpHandle._next = tmpHandle._front = null;
+                        _head = null;
+                        break;
+                    }
+                    else if (tmpHandle == _head)
+                    {
+                        //handle就是head
+                        tmpHandle._next._front = tmpHandle._front;
+                        tmpHandle._front._next = tmpHandle._next;
+                        _head = tmpHandle._next;
+                        tmpHandle._next = null;
+                        tmpHandle._front = null;
+                    }
+                    else
+                    {
+                        //其他情况
+                        tmpHandle._next._front = tmpHandle._front;
+                        tmpHandle._front._next = tmpHandle._next;
+                        EventHandle nextHandle = tmpHandle._next;
+                        tmpHandle._next = null;
+                        tmpHandle._front = null;
+                        tmpHandle = nextHandle;
+                        if (tmpHandle == null || tmpHandle == _head)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        _lockCount--;
+        if (exceptions != null)
+        {
+            throw new AggregateException(exceptions);
         }
     }
 }
