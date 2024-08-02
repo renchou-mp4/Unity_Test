@@ -1,4 +1,3 @@
-using AillieoUtils;
 using UnityEngine;
 
 public class EventTest : MonoBehaviour
@@ -6,11 +5,7 @@ public class EventTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        EventCenter
-    }
-    private void CallBack()
-    {
-        Debug.Log("eventDelegate add listener callback");
+
     }
 
     // Update is called once per frame

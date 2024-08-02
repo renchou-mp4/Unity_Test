@@ -12,6 +12,52 @@ public class EventCenter
         return this.GetEvent(eventName, true).AddListener(callback);
     }
 
+
+
+    public bool Remove(string eventName, EventHandle handle)
+    {
+        EventDelegate del = this.GetEvent(eventName, false);
+        if (del != null)
+        {
+            return del.Remove(handle);
+        }
+        return false;
+    }
+
+    public int RemoveListener(string eventName, Action callback)
+    {
+        EventDelegate del = this.GetEvent(eventName, false);
+        if (del != null)
+        {
+            return del.RemoveListener(callback);
+        }
+        return 0;
+    }
+
+    public void RemoveAllListeners(string eventName)
+    {
+        this.GetEvent(eventName, false)?.RemoveAllListeners();
+    }
+
+    public void Invoke(string eventName)
+    {
+        this.GetEvent(eventName, false)?.Invoke();
+    }
+
+    public void InvokeAll(string eventName)
+    {
+        this.GetEvent(eventName, false)?.InvokeAll();
+    }
+
+    public void Clear()
+    {
+        foreach (var del in _mappings.Values)
+        {
+            del.RemoveAllListeners();
+        }
+        _mappings.Clear();
+    }
+
     private EventDelegate GetEvent(string eventName, bool createIfInexist)
     {
         if (eventName.IsNullOrEmpty())

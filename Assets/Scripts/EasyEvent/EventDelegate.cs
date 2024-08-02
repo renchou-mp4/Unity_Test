@@ -7,6 +7,11 @@ public class EventDelegate
     private EventHandle _head;
     public int _ListenerCount;
 
+    public static implicit operator EasyEvent(EventDelegate del)
+    {
+        return new EasyEvent(del);
+    }
+
     public EventHandle AddListener(Action action)
     {
         if (action == null)
