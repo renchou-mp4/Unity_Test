@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 
-
 public delegate void EventCallback(params object[] args);
 
 
@@ -10,7 +9,6 @@ public class EventManager : MonoSingleton<EventManager>
 
     //<事件名,<事件源,<回调方法名，回调方法>>>
     private static Dictionary<string, Dictionary<object, Dictionary<int, EventCallback>>> _eventDic = new();
-
 
     public static void AddEvent(object source, string eventName, EventCallback eventCallback)
     {
@@ -26,7 +24,7 @@ public class EventManager : MonoSingleton<EventManager>
                 int hashCode = eventCallback.GetHashCode();
                 if (_eventDic[eventName][source].ContainsKey(hashCode))
                 {
-                    //ToDo 输出error，当前方法已注册
+                    LogManager.LogError($"【{eventName}】事件---【{source}】源：当前方法【{eventCallback.Method.Name}】已注册！");
                     return;
                 }
                 else
@@ -64,7 +62,7 @@ public class EventManager : MonoSingleton<EventManager>
 
         if (!_eventDic.ContainsKey(eventName))
         {
-            //ToDo 输出error，eventName没有注册
+            LogManager.LogError($"移除失败，【{eventName}】事件没有注册！");
             return;
         }
 
@@ -94,7 +92,7 @@ public class EventManager : MonoSingleton<EventManager>
 
                 if (!_eventDic[eventName][source].ContainsKey(hashCode))
                 {
-                    //ToDo 输出error，eventCallbackName没有注册
+                    LogManager.LogError($"移除失败，【{eventName}】事件---【{source}】源：当前方法【{eventCallback.Method.Name}】没有注册！");
                     return;
                 }
 
@@ -132,7 +130,7 @@ public class EventManager : MonoSingleton<EventManager>
     {
         if (!_eventDic.ContainsKey(eventName))
         {
-            //ToDo 输出error，eventName没有注册
+            LogManager.LogError($"调用失败，【{eventName}】事件没有注册！");
             return;
         }
 

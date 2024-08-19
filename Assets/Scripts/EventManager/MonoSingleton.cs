@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
 {
-    private T _instance;
+    private static T _instance;
 
-    public T Instance
+    public static T Instance
     {
         get
         {
