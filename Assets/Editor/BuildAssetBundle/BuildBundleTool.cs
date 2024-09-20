@@ -1,4 +1,4 @@
-using UnityEditor;
+using UnityEngine;
 
 public class BuildBundleTool
 {
@@ -7,10 +7,14 @@ public class BuildBundleTool
         AssetBundle,
     }
 
+    public static string _OutputPath { get; private set; } = "D:/";
+    public static string _BundlePath { get; private set; } = Application.dataPath + "/Bundle";
+
+
     private static BuildType _curType = BuildType.AssetBundle;
     private static IBuildBundle _curBuilding = null;
 
-    [MenuItem("BuildBundle/BuildAssetBundle")]
+
     public static void BuildBundle()
     {
         switch (_curType)
