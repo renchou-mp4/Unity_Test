@@ -25,4 +25,9 @@ public class BuildBundleTool
                 break;
         }
     }
+
+    public static string GetAllNeedBuildFileExtension()
+    {
+        return ".png";
+    }
 }

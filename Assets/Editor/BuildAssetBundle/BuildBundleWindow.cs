@@ -24,5 +24,6 @@ public class BuildBundleWindow : EditorWindow
 
         EditorGUILayout.TextField("Bundle文件夹路径", BuildBundleTool._BundlePath);
         EditorGUILayout.TextField("输出路径", BuildBundleTool._OutputPath);
+
     }
 }

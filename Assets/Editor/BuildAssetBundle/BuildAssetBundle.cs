@@ -1,5 +1,6 @@
+using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
-using UnityEditor.Build.Content;
 using UnityEditor.Build.Pipeline;
 using UnityEditor.Build.Pipeline.Interfaces;
 
@@ -15,13 +16,27 @@ public class BuildAssetBundle : IBuildBundle
 
     private AssetBundleBuild[] GetAssetBundleBuild()
     {
-        AssetBundleBuild[] assetBundleBuild = ContentBuildInterface.GenerateAssetBundleBuilds();
+        AssetBundleBuild[] assetBundleBuild = GetBundleBuild_AllAssetSingle();
 
         return assetBundleBuild;
     }
 
-    private void GetBundleBuild_AllAssetSingle()
+    private AssetBundleBuild[] GetBundleBuild_AllAssetSingle()
     {
-        //获取指定文件夹下所有的资源
+        List<AssetBundleBuild> allBuild = new();
+
+        //获取指定文件夹下所有的资源路径
+        string[] allFilesPath = Directory.GetFiles(BuildBundleTool._BundlePath, BuildBundleTool.GetAllNeedBuildFileExtension(), SearchOption.AllDirectories);
+
+        foreach (string filePath in allFilesPath)
+        {
+            allBuild.Add(new AssetBundleBuild
+            {
+                assetBundleName = FileTools.GetFileNameWithExtension(filePath),
+                assetNames = new string[] { filePath }
+            });
+        }
+
+        return allBuild.ToArray();
     }
 }
