@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BuildBundleTool
+public static class BuildBundleManager
 {
     public enum BuildType
     {
@@ -12,6 +12,14 @@ public class BuildBundleTool
 
 
     private static BuildType _curType = BuildType.AssetBundle;
+    public static BuildType _CurType
+    {
+        get => _curType;
+        set
+        {
+            _curType = value;
+        }
+    }
     private static IBuildBundle _curBuilding = null;
 
 

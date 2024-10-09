@@ -8,7 +8,7 @@ public class BuildAssetBundle : IBuildBundle
 {
     public void Build()
     {
-        var bundleBuildParameters = new BundleBuildParameters(BuildTarget.StandaloneWindows64, BuildTargetGroup.Standalone, BuildBundleTool._OutputPath);
+        var bundleBuildParameters = new BundleBuildParameters(BuildTarget.StandaloneWindows64, BuildTargetGroup.Standalone, BuildBundleManager._OutputPath);
         var bundleBuildContent = new BundleBuildContent(GetAssetBundleBuild());
         IBundleBuildResults results;
         ContentPipeline.BuildAssetBundles(bundleBuildParameters, bundleBuildContent, out results);
@@ -26,7 +26,7 @@ public class BuildAssetBundle : IBuildBundle
         List<AssetBundleBuild> allBuild = new();
 
         //获取指定文件夹下所有的资源路径
-        string[] allFilesPath = Directory.GetFiles(BuildBundleTool._BundlePath, BuildBundleTool.GetAllNeedBuildFileExtension(), SearchOption.AllDirectories);
+        string[] allFilesPath = Directory.GetFiles(BuildBundleManager._BundlePath, BuildBundleManager.GetAllNeedBuildFileExtension(), SearchOption.AllDirectories);
 
         foreach (string filePath in allFilesPath)
         {
