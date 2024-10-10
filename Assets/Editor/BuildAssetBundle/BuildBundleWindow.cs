@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector.Editor;
 using System;
+using Tools;
 using UnityEditor;
 using UnityEngine;
 
@@ -36,14 +37,14 @@ public class BuildBundleWindow : OdinEditorWindow
 
         //信息展示
 
-        EditorGUILayout.TextField("Bundle文件夹路径", BuildBundleManager._BundlePath);
-        EditorGUILayout.TextField("输出路径", BuildBundleManager._OutputPath);
+        EditorGUILayout.TextField("Bundle文件夹路径", BuildBundleTools._BundlePath);
+        EditorGUILayout.TextField("输出路径", BuildBundleTools._OutputPath);
 
         //打包相关设置
-        selectType = EditorGUILayout.Popup("打包方式", selectType, Enum.GetNames(typeof(BuildBundleManager.BuildType)));
-        if (selectType != (int)BuildBundleManager._CurType)
+        selectType = EditorGUILayout.Popup("打包方式", selectType, Enum.GetNames(typeof(BuildBundleTools.BuildType)));
+        if (selectType != (int)BuildBundleTools._CurType)
         {
-            BuildBundleManager._CurType = (BuildBundleManager.BuildType)selectType;
+            BuildBundleTools._CurType = (BuildBundleTools.BuildType)selectType;
         }
 
         EditorGUILayout.Space(20);
@@ -65,6 +66,6 @@ public class BuildBundleWindow : OdinEditorWindow
 
     private void StartBuildBundle()
     {
-        BuildBundleManager.BuildBundle();
+        BuildBundleTools.BuildBundle();
     }
 }
