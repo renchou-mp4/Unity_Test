@@ -1,3 +1,5 @@
+using Managers;
+
 public interface ILogging
 {
     public abstract void Log(LogData logData);
