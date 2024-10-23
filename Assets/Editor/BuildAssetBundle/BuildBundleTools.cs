@@ -9,7 +9,7 @@ namespace Tools
             AssetBundle,
         }
 
-        public static string _OutputPath { get; private set; } = "D:/";
+        public static string _OutputPath { get; private set; } = Application.streamingAssetsPath + "/AssetBundle";
         public static string _BundlePath { get; private set; } = Application.dataPath + "/Bundle";
         public static string _ABExtension { get; } = ".ab";
 
@@ -36,9 +36,13 @@ namespace Tools
             }
         }
 
-        public static string GetAllNeedBuildFileExtension()
+        public static string[] GetAllNeedBuildFileExtension()
         {
-            return ".png";
+            return new string[]
+            {
+                ".png",
+                ".spriteatlas",
+            };
         }
     }
 }
