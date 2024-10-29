@@ -1,5 +1,8 @@
+﻿using Managers;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Tools;
 using UnityEditor;
 using UnityEditor.Build.Pipeline;
@@ -7,6 +10,8 @@ using UnityEditor.Build.Pipeline.Interfaces;
 
 public class BuildAssetBundle : IBuildBundle
 {
+    private HashSet<AssetBundleBuild> _allBuild = new();
+
     public void Build()
     {
         var bundleBuildParameters = new BundleBuildParameters(BuildTarget.StandaloneWindows64, BuildTargetGroup.Standalone, BuildBundleTools._OutputPath);
@@ -17,31 +22,68 @@ public class BuildAssetBundle : IBuildBundle
 
     private AssetBundleBuild[] GetAssetBundleBuild()
     {
-        AssetBundleBuild[] assetBundleBuild = GetBundleBuild_AllAssetSingle();
+        //仅获取文件夹路径
+        string[] allDirectoriesPath = Directory.GetDirectories(BuildBundleTools._BundlePath, "*", SearchOption.TopDirectoryOnly);
 
-        return assetBundleBuild;
-    }
-
-    private AssetBundleBuild[] GetBundleBuild_AllAssetSingle()
-    {
-        List<AssetBundleBuild> allBuild = new();
-
-        //��ȡָ���ļ��������е���Դ·��
-        string[] allFilesPath = Directory.GetFiles(BuildBundleTools._BundlePath, "*", SearchOption.AllDirectories);
-
-        foreach (string filePath in allFilesPath)
+        foreach (string directoryPath in allDirectoriesPath)
         {
-            if (!filePath.IsEndWith(BuildBundleTools.GetAllNeedBuildFileExtension()))
-                continue;
-
-            string fileTmpPath = filePath.ReplacePathBackslash();
-            allBuild.Add(new AssetBundleBuild
+            if (BuildBundleTools.IsStartWithSpecifiedAssetPath(directoryPath))
             {
-                assetBundleName = fileTmpPath.GetFileNameWithExtension() + BuildBundleTools._ABExtension,
-                assetNames = new string[] { fileTmpPath.RelativeToAssetPath() }
-            });
+                GetBundleBuild_Directory(directoryPath);
+            }
         }
 
-        return allBuild.ToArray();
+        //仅获取文件
+        string[] allFilesPath = Directory.GetFiles(BuildBundleTools._BundlePath, "*", SearchOption.TopDirectoryOnly);
+
+
+        //获取指定文件夹下所有的资源路径
+        //string[] allFilesPath = Directory.GetFiles(BuildBundleTools._BundlePath, "*", SearchOption.AllDirectories);
+
+        //foreach (string filePath in allFilesPath)
+        //{
+        //    if (filePath.IsEndWith(BuildBundleTools.GetNoNeedBuildFileExtension()))
+        //        continue;
+
+        //    //按目录打包的资源
+        //    string filetmpPath = filePath.ReplacePathBackslash();
+        //    if (BuildBundleTools.IsStartWithSpecifiedAssetPath(filetmpPath))
+        //    {
+        //        GetBundleBuild_Directory(filetmpPath);
+        //    }
+
+        //}
+
+        return _allBuild.ToArray();
+    }
+
+
+    private void GetBundleBuild_Directory(string path)
+    {
+        //处理文件
+        string[] allFilesPath = Directory.GetFiles(path, "*", SearchOption.TopDirectoryOnly);
+        List<string> assetNames = new(allFilesPath.Count());
+        foreach (string filePath in allFilesPath)
+        {
+            if (filePath.IsEndWith(BuildBundleTools.GetNoNeedBuildFileExtension()))
+                continue;
+            assetNames.Add(filePath);
+        }
+
+        try
+        {
+            _allBuild.Add(new AssetBundleBuild
+            {
+                assetBundleName = path.GetDirectoryName() + BuildBundleTools._ABExtension,
+                assetNames = assetNames.ToArray(),
+            });
+        }
+        catch (Exception e)
+        {
+            LogManager.Log("存在相同BundleBuildName！" + e.Message);
+        }
+
+        //处理文件夹
+        string[] allDirectoriesPath = Directory.GetDirectories(path, "*", SearchOption.TopDirectoryOnly);
     }
 }

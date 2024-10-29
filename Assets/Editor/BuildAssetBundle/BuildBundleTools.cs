@@ -36,13 +36,55 @@ namespace Tools
             }
         }
 
-        public static string[] GetAllNeedBuildFileExtension()
+        /// <summary>
+        /// 获取需要打包的资源后缀
+        /// </summary>
+        /// <returns></returns>
+        public static string[] GetNoNeedBuildFileExtension()
         {
             return new string[]
             {
-                ".png",
-                ".spriteatlas",
+                ".meta",
             };
+        }
+
+        /// <summary>
+        /// 获取按目录构建AB包的资源路径
+        /// </summary>
+        /// <returns></returns>
+        public static string[] GetNeedBuildPathByDirectory()
+        {
+            return new string[]
+            {
+                "Assets/Bundle/Sprites",
+            };
+        }
+
+        /// <summary>
+        /// 该路径是否以指定的Asset路径开头
+        /// </summary>
+        /// <param name="filePath">是否为Asset开始都可以</param>
+        /// <param name="specifiedPath"></param>
+        /// <returns></returns>
+        public static bool IsStartWithSpecifiedAssetPath(string filePath, params string[] specifiedPath)
+        {
+            string assetFilePath = GetAssetPath(filePath);
+            foreach (string path in specifiedPath)
+            {
+                if (assetFilePath.StartsWith(path))
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 将路径变为Asset目录开始的相对路径
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static string GetAssetPath(string filePath)
+        {
+            return filePath.Substring(filePath.IndexOf("Asset"));
         }
     }
 }

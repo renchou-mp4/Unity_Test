@@ -15,6 +15,11 @@ namespace Tools
             return filePath.Substring(startIndex, filePath.LastIndexOf('.') - startIndex);
         }
 
+        public static string GetDirectoryName(this string directoryPath)
+        {
+            return directoryPath.Substring(directoryPath.LastIndexOf("/") + 1);
+        }
+
         public static string Extension(this string filePath)
         {
             return filePath.Substring(filePath.LastIndexOf('.'));
@@ -24,5 +29,6 @@ namespace Tools
         {
             return extension.ToList().Contains(filePath.Extension());
         }
+
     }
 }
