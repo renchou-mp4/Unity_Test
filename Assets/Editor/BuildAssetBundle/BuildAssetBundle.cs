@@ -22,19 +22,7 @@ public class BuildAssetBundle : IBuildBundle
 
     private AssetBundleBuild[] GetAssetBundleBuild()
     {
-        //仅获取文件夹路径
-        string[] allDirectoriesPath = Directory.GetDirectories(BuildBundleTools._BundlePath, "*", SearchOption.TopDirectoryOnly);
-
-        foreach (string directoryPath in allDirectoriesPath)
-        {
-            if (BuildBundleTools.IsStartWithSpecifiedAssetPath(directoryPath))
-            {
-                GetBundleBuild_Directory(directoryPath);
-            }
-        }
-
-        //仅获取文件
-        string[] allFilesPath = Directory.GetFiles(BuildBundleTools._BundlePath, "*", SearchOption.TopDirectoryOnly);
+        GetBundleBuild_Directory(BuildBundleTools._BundlePath);
 
 
         //获取指定文件夹下所有的资源路径
@@ -67,16 +55,19 @@ public class BuildAssetBundle : IBuildBundle
         {
             if (filePath.IsEndWith(BuildBundleTools.GetNoNeedBuildFileExtension()))
                 continue;
-            assetNames.Add(filePath);
+            assetNames.Add(BuildBundleTools.GetAssetPath(filePath.ReplacePathBackslash()));
         }
 
         try
         {
-            _allBuild.Add(new AssetBundleBuild
+            if (assetNames.Count > 0)
             {
-                assetBundleName = path.GetDirectoryName() + BuildBundleTools._ABExtension,
-                assetNames = assetNames.ToArray(),
-            });
+                _allBuild.Add(new AssetBundleBuild
+                {
+                    assetBundleName = path.GetDirectoryName() + BuildBundleTools._ABExtension,
+                    assetNames = assetNames.ToArray(),
+                });
+            }
         }
         catch (Exception e)
         {
@@ -85,5 +76,13 @@ public class BuildAssetBundle : IBuildBundle
 
         //处理文件夹
         string[] allDirectoriesPath = Directory.GetDirectories(path, "*", SearchOption.TopDirectoryOnly);
+        foreach (string directoryPath in allDirectoriesPath)
+        {
+            string tmpPath = directoryPath.ReplacePathBackslash();
+            if (BuildBundleTools.IsStartWithSpecifiedAssetPath(tmpPath, BuildBundleTools.GetNeedBuildPathByDirectory()))
+            {
+                GetBundleBuild_Directory(tmpPath);
+            }
+        }
     }
 }
