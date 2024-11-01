@@ -17,31 +17,16 @@ public class BuildAssetBundle : IBuildBundle
         var bundleBuildParameters = new BundleBuildParameters(BuildTarget.StandaloneWindows64, BuildTargetGroup.Standalone, BuildBundleTools._OutputPath);
         var bundleBuildContent = new BundleBuildContent(GetAssetBundleBuild());
         IBundleBuildResults results;
-        ContentPipeline.BuildAssetBundles(bundleBuildParameters, bundleBuildContent, out results);
+        ReturnCode returnCode = ContentPipeline.BuildAssetBundles(bundleBuildParameters, bundleBuildContent, out results);
+        if (returnCode == ReturnCode.Success)
+        {
+            LogManager.Log("打包完成！");
+        }
     }
 
     private AssetBundleBuild[] GetAssetBundleBuild()
     {
         GetBundleBuild_Directory(BuildBundleTools._BundlePath);
-
-
-        //获取指定文件夹下所有的资源路径
-        //string[] allFilesPath = Directory.GetFiles(BuildBundleTools._BundlePath, "*", SearchOption.AllDirectories);
-
-        //foreach (string filePath in allFilesPath)
-        //{
-        //    if (filePath.IsEndWith(BuildBundleTools.GetNoNeedBuildFileExtension()))
-        //        continue;
-
-        //    //按目录打包的资源
-        //    string filetmpPath = filePath.ReplacePathBackslash();
-        //    if (BuildBundleTools.IsStartWithSpecifiedAssetPath(filetmpPath))
-        //    {
-        //        GetBundleBuild_Directory(filetmpPath);
-        //    }
-
-        //}
-
         return _allBuild.ToArray();
     }
 
