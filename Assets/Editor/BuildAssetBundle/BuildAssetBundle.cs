@@ -1,5 +1,4 @@
-﻿using Managers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,7 +19,7 @@ public class BuildAssetBundle : IBuildBundle
         ReturnCode returnCode = ContentPipeline.BuildAssetBundles(bundleBuildParameters, bundleBuildContent, out results);
         if (returnCode == ReturnCode.Success)
         {
-            LogManager.Log("打包完成！");
+            LogTools.Log("打包完成！");
         }
     }
 
@@ -56,7 +55,7 @@ public class BuildAssetBundle : IBuildBundle
         }
         catch (Exception e)
         {
-            LogManager.Log("存在相同BundleBuildName！" + e.Message);
+            LogTools.Log("存在相同BundleBuildName！" + e.Message);
         }
 
         //处理文件夹

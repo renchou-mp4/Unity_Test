@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Tools;
 
 namespace Managers
 {
@@ -25,7 +26,7 @@ namespace Managers
                     int hashCode = eventCallback.GetHashCode();
                     if (_eventDic[eventName][source].ContainsKey(hashCode))
                     {
-                        LogManager.LogError($"【{eventName}】事件---【{source}】源：当前方法【{eventCallback.Method.Name}】已注册！");
+                        LogTools.LogError($"【{eventName}】事件---【{source}】源：当前方法【{eventCallback.Method.Name}】已注册！");
                         return;
                     }
                     else
@@ -63,7 +64,7 @@ namespace Managers
 
             if (!_eventDic.ContainsKey(eventName))
             {
-                LogManager.LogError($"移除失败，【{eventName}】事件没有注册！");
+                LogTools.LogError($"移除失败，【{eventName}】事件没有注册！");
                 return;
             }
 
@@ -93,7 +94,7 @@ namespace Managers
 
                     if (!_eventDic[eventName][source].ContainsKey(hashCode))
                     {
-                        LogManager.LogError($"移除失败，【{eventName}】事件---【{source}】源：当前方法【{eventCallback.Method.Name}】没有注册！");
+                        LogTools.LogError($"移除失败，【{eventName}】事件---【{source}】源：当前方法【{eventCallback.Method.Name}】没有注册！");
                         return;
                     }
 
@@ -131,7 +132,7 @@ namespace Managers
         {
             if (!_eventDic.ContainsKey(eventName))
             {
-                LogManager.LogError($"调用失败，【{eventName}】事件没有注册！");
+                LogTools.LogError($"调用失败，【{eventName}】事件没有注册！");
                 return;
             }
 
