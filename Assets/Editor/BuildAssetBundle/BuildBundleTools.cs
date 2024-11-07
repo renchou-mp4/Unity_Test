@@ -10,7 +10,7 @@ namespace Tools
         }
 
         public static string _OutputPath { get; private set; } = Application.streamingAssetsPath + "/AssetBundle";
-        public static string _ManifestOutputPath { get; set; } = Application.dataPath;
+        public static string _ManifestOutputPath { get; set; } = Application.dataPath + "/asset_version.json";
         public static string _BundlePath { get; private set; } = Application.dataPath + "/Bundle";
         public static string _ABExtension { get; } = ".ab";
 

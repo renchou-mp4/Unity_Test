@@ -1,21 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using Tools;
 using UnityEditor;
 using UnityEditor.Build.Pipeline;
 using UnityEditor.Build.Pipeline.Interfaces;
+using UnityEngine;
 
+
+[System.Serializable]
 public class AssetBundleInfo
 {
-    public string _BundleName { get; set; }
-    public string[] _AssetsName { get; set; }
-    public long _Size { get; set; }
-    public SHA256 _MD5 { get; set; }
+    public string _bundleName;
+    public string[] _assetsName;
+    public long _size;
+    public string _md5;
 }
 
+[System.Serializable]
+public class AssetBundleList
+{
+    public List<AssetBundleInfo> assetBundleInfos = new();
+
+    public void AddData(AssetBundleInfo assetBundleInfo)
+    {
+        assetBundleInfos.Add(assetBundleInfo);
+    }
+}
 
 public class BuildAssetBundle : IBuildBundle
 {
@@ -23,6 +34,8 @@ public class BuildAssetBundle : IBuildBundle
 
     public void Build()
     {
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
         var bundleBuildParameters = new BundleBuildParameters(BuildTarget.StandaloneWindows64, BuildTargetGroup.Standalone, BuildBundleTools._OutputPath);
         var bundleBuildContent = new BundleBuildContent(GetAssetBundleBuild());
         IBundleBuildResults results;
@@ -31,6 +44,9 @@ public class BuildAssetBundle : IBuildBundle
         {
             LogTools.Log("打包完成！");
         }
+        File.Delete(BuildBundleTools._OutputPath + "/buildlogtep.json");
+        File.Delete(BuildBundleTools._OutputPath + "/buildlogtep.json.meta");
+        GenerateBundleManifest();
     }
 
     private AssetBundleBuild[] GetAssetBundleBuild()
@@ -63,7 +79,7 @@ public class BuildAssetBundle : IBuildBundle
                 });
             }
         }
-        catch (Exception e)
+        catch
         {
             LogTools.Log($"存在相同BundleBuildName: 【{path + BuildBundleTools._ABExtension}】");
         }
@@ -97,11 +113,11 @@ public class BuildAssetBundle : IBuildBundle
             {
                 _allBuild.Add(new AssetBundleBuild
                 {
-                    assetBundleName = path + BuildBundleTools._ABExtension,
+                    assetBundleName = filePath.ReplacePathBackslash().GetFileNameWithExtension() + BuildBundleTools._ABExtension,
                     assetNames = new string[] { BuildBundleTools.GetAssetPath(filePath.ReplacePathBackslash()) },
                 });
             }
-            catch (Exception e)
+            catch
             {
                 LogTools.Log($"存在相同BundleBuildName: 【{path + BuildBundleTools._ABExtension}】");
             }
@@ -127,22 +143,26 @@ public class BuildAssetBundle : IBuildBundle
 
     private void GenerateBundleManifest()
     {
-        List<AssetBundleInfo> assetBundleInfos = new();
+        AssetBundleList assetBundleList = new();
+
         //获取所有AB包文件
         FileInfo[] fileInfos = new DirectoryInfo(BuildBundleTools._OutputPath).GetFiles();
 
         HashSet<AssetBundleBuild>.Enumerator enumerator = _allBuild.GetEnumerator();
-        for (int i = 0; i < fileInfos.Length; i++, enumerator.MoveNext())
+        enumerator.MoveNext();
+        for (int i = 0; i < fileInfos.Length; i++)
         {
-            assetBundleInfos.Add(new AssetBundleInfo
+            if (fileInfos[i].Name.IsEndWith(BuildBundleTools.GetNoNeedBuildFileExtension()))
+                continue;
+            assetBundleList.AddData(new AssetBundleInfo
             {
-                _BundleName = enumerator.Current.assetBundleName,
-                _AssetsName = enumerator.Current.assetNames,
-                _Size = fileInfos[i].Length,
-                _MD5 = SHA256.Create()
+                _bundleName = enumerator.Current.assetBundleName,
+                _assetsName = enumerator.Current.assetNames,
+                _size = fileInfos[i].Length,
+                _md5 = EncryptionTools.EncryptionFileBySHA256(BuildBundleTools._OutputPath + "/" + enumerator.Current.assetBundleName)
             });
+            enumerator.MoveNext();
         }
-
-        //File.WriteAllText(BuildBundleTools._ManifestOutputPath,);
+        File.WriteAllText(BuildBundleTools._ManifestOutputPath, JsonUtility.ToJson(assetBundleList));
     }
 }
