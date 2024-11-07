@@ -8,7 +8,7 @@ public class Test : MonoBehaviour
     void Start()
     {
         _image = GetComponent<Image>();
-        AssetBundle ab = AssetBundle.LoadFromFile("D:/bg_wheel_of_fortune_box.png.ab");
+        AssetBundle ab = AssetBundle.LoadFromFile("Assets/StreamingAssets/AssetBundle/Sprites.ab");
         string[] names = ab.GetAllAssetNames();
         Sprite sprite = ab.LoadAsset<Sprite>(names[0]);
         _image.sprite = sprite;

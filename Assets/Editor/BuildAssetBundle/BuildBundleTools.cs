@@ -10,6 +10,7 @@ namespace Tools
         }
 
         public static string _OutputPath { get; private set; } = Application.streamingAssetsPath + "/AssetBundle";
+        public static string _ManifestOutputPath { get; set; } = Application.dataPath;
         public static string _BundlePath { get; private set; } = Application.dataPath + "/Bundle";
         public static string _ABExtension { get; } = ".ab";
 
@@ -57,6 +58,18 @@ namespace Tools
             return new string[]
             {
                 "Assets/Bundle/Sprites",
+            };
+        }
+
+        /// <summary>
+        /// 获取按单个文件构建AB包的资源路径
+        /// </summary>
+        /// <returns></returns>
+        public static string[] GetNeedBuildPathBySingle()
+        {
+            return new string[]
+            {
+                "Assets/Bundle/Fonts",
             };
         }
 
