@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using Tools;
 
 namespace Managers
@@ -9,7 +9,7 @@ namespace Managers
     {
         private const string _globalName = "Global";
 
-        //<ÊÂ¼şÃû,<ÊÂ¼şÔ´,<»Øµ÷·½·¨Ãû£¬»Øµ÷·½·¨>>>
+        //<äº‹ä»¶å,<äº‹ä»¶æº,<å›è°ƒæ–¹æ³•åï¼Œå›è°ƒæ–¹æ³•>>>
         private static Dictionary<string, Dictionary<object, Dictionary<int, EventCallback>>> _eventDic = new();
 
         public static void AddEvent(object source, string eventName, EventCallback eventCallback)
@@ -26,7 +26,7 @@ namespace Managers
                     int hashCode = eventCallback.GetHashCode();
                     if (_eventDic[eventName][source].ContainsKey(hashCode))
                     {
-                        LogTools.LogError($"¡¾{eventName}¡¿ÊÂ¼ş---¡¾{source}¡¿Ô´£ºµ±Ç°·½·¨¡¾{eventCallback.Method.Name}¡¿ÒÑ×¢²á£¡");
+                        LogTools.LogError($"ã€{eventName}ã€‘äº‹ä»¶---ã€{source}ã€‘æºï¼šå½“å‰æ–¹æ³•ã€{eventCallback.Method.Name}ã€‘å·²æ³¨å†Œï¼");
                         return;
                     }
                     else
@@ -64,7 +64,7 @@ namespace Managers
 
             if (!_eventDic.ContainsKey(eventName))
             {
-                LogTools.LogError($"ÒÆ³ıÊ§°Ü£¬¡¾{eventName}¡¿ÊÂ¼şÃ»ÓĞ×¢²á£¡");
+                LogTools.LogError($"ç§»é™¤å¤±è´¥ï¼Œã€{eventName}ã€‘äº‹ä»¶æ²¡æœ‰æ³¨å†Œï¼");
                 return;
             }
 
@@ -73,10 +73,10 @@ namespace Managers
             {
                 if (eventCallback == null)
                 {
-                    //ÒÆ³ıÖ¸¶¨ÊÂ¼şÖ¸¶¨ÊÂ¼şÔ´µÄËùÓĞ»Øµ÷·½·¨
+                    //ç§»é™¤æŒ‡å®šäº‹ä»¶æŒ‡å®šäº‹ä»¶æºçš„æ‰€æœ‰å›è°ƒæ–¹æ³•
                     foreach (var callbackDic in _eventDic[eventName].Values)
                     {
-                        //Ö÷¶¯ÊÍ·ÅÄÚ´æ£¬ÔÚÄÚ´æÊÜÏŞÊ±¸üºÃ
+                        //ä¸»åŠ¨é‡Šæ”¾å†…å­˜ï¼Œåœ¨å†…å­˜å—é™æ—¶æ›´å¥½
                         callbackDic.Clear();
                     }
 
@@ -89,12 +89,12 @@ namespace Managers
                 }
                 else
                 {
-                    //ÒÆ³ıÖ¸¶¨ÊÂ¼şÖ¸¶¨ÊÂ¼şÔ´µÄÖ¸¶¨»Øµ÷·½·¨
+                    //ç§»é™¤æŒ‡å®šäº‹ä»¶æŒ‡å®šäº‹ä»¶æºçš„æŒ‡å®šå›è°ƒæ–¹æ³•
                     int hashCode = eventCallback.GetHashCode();
 
                     if (!_eventDic[eventName][source].ContainsKey(hashCode))
                     {
-                        LogTools.LogError($"ÒÆ³ıÊ§°Ü£¬¡¾{eventName}¡¿ÊÂ¼ş---¡¾{source}¡¿Ô´£ºµ±Ç°·½·¨¡¾{eventCallback.Method.Name}¡¿Ã»ÓĞ×¢²á£¡");
+                        LogTools.LogError($"ç§»é™¤å¤±è´¥ï¼Œã€{eventName}ã€‘äº‹ä»¶---ã€{source}ã€‘æºï¼šå½“å‰æ–¹æ³•ã€{eventCallback.Method.Name}ã€‘æ²¡æœ‰æ³¨å†Œï¼");
                         return;
                     }
 
@@ -113,12 +113,12 @@ namespace Managers
             }
             else
             {
-                //ÒÆ³ıÖ¸¶¨ÊÂ¼şËùÓĞÊÂ¼şÔ´
+                //ç§»é™¤æŒ‡å®šäº‹ä»¶æ‰€æœ‰äº‹ä»¶æº
                 foreach (var sourceDic in _eventDic.Values)
                 {
                     foreach (var callbackDic in sourceDic.Values)
                     {
-                        //Ö÷¶¯ÊÍ·ÅÄÚ´æ£¬ÔÚÄÚ´æÊÜÏŞÊ±¸üºÃ
+                        //ä¸»åŠ¨é‡Šæ”¾å†…å­˜ï¼Œåœ¨å†…å­˜å—é™æ—¶æ›´å¥½
                         callbackDic.Clear();
                     }
                     sourceDic.Clear();
@@ -132,7 +132,7 @@ namespace Managers
         {
             if (!_eventDic.ContainsKey(eventName))
             {
-                LogTools.LogError($"µ÷ÓÃÊ§°Ü£¬¡¾{eventName}¡¿ÊÂ¼şÃ»ÓĞ×¢²á£¡");
+                LogTools.LogError($"è°ƒç”¨å¤±è´¥ï¼Œã€{eventName}ã€‘äº‹ä»¶æ²¡æœ‰æ³¨å†Œï¼");
                 return;
             }
 
@@ -140,7 +140,7 @@ namespace Managers
             {
                 source = _globalName;
 
-                //²»Ö¸¶¨ÊÂ¼şÔ´
+                //ä¸æŒ‡å®šäº‹ä»¶æº
                 foreach (var sourceDic in _eventDic[eventName])
                 {
                     foreach (var callbackDic in sourceDic.Value)
@@ -151,7 +151,7 @@ namespace Managers
             }
             else
             {
-                //Ö¸¶¨ÊÂ¼şÔ´
+                //æŒ‡å®šäº‹ä»¶æº
                 foreach (var sourceDic in _eventDic[eventName])
                 {
                     if (source == sourceDic.Key)

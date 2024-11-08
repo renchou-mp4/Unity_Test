@@ -1,4 +1,4 @@
-public interface IBuildBundle
+﻿public interface IBuildBundle
 {
     public abstract void Build();
 }

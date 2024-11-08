@@ -1,4 +1,4 @@
-using Sirenix.OdinInspector.Editor;
+ï»¿using Sirenix.OdinInspector.Editor;
 using System;
 using Tools;
 using UnityEditor;
@@ -8,7 +8,7 @@ public class BuildBundleWindow : OdinEditorWindow
 {
     public BuildBundleWindow()
     {
-        this.titleContent = new UnityEngine.GUIContent("´ò°üÑ¡Ïî´°¿Ú");
+        this.titleContent = new UnityEngine.GUIContent("æ‰“åŒ…é€‰é¡¹çª—å£");
     }
 
     [MenuItem("Window/BuildBundle")]
@@ -20,13 +20,13 @@ public class BuildBundleWindow : OdinEditorWindow
 
     private const int Btn_Build_Width = 200;
     private const int Btn_Build_Height = 50;
-    //´ò°ü·½Ê½
+    //æ‰“åŒ…æ–¹å¼
     private int selectType = 0;
     protected override void OnImGUI()
     {
-        //±êÌâ
+        //æ ‡é¢˜
         EditorGUILayout.Space(20);
-        EditorGUILayout.LabelField("´ò°üÉèÖÃ´°¿Ú", new GUIStyle
+        EditorGUILayout.LabelField("æ‰“åŒ…è®¾ç½®çª—å£", new GUIStyle
         {
             fontSize = 24,
             fontStyle = FontStyle.Bold,
@@ -35,13 +35,17 @@ public class BuildBundleWindow : OdinEditorWindow
         });
         EditorGUILayout.Space(20);
 
-        //ĞÅÏ¢Õ¹Ê¾
+        //ä¿¡æ¯å±•ç¤º
 
-        EditorGUILayout.TextField("BundleÎÄ¼ş¼ĞÂ·¾¶", BuildBundleTools._BundlePath);
-        EditorGUILayout.TextField("Êä³öÂ·¾¶", BuildBundleTools._OutputPath);
+        EditorGUILayout.TextField("Bundleæ–‡ä»¶å¤¹è·¯å¾„", BuildBundleTools._BundlePath);
+        EditorGUILayout.Space(5);
+        EditorGUILayout.TextField("ABåŒ…è¾“å‡ºè·¯å¾„", BuildBundleTools._OutputPath);
+        EditorGUILayout.Space(5);
+        EditorGUILayout.TextField("Asset_Versionè¾“å‡ºè·¯å¾„", BuildBundleTools._ManifestOutputPath);
+        EditorGUILayout.Space(5);
 
-        //´ò°üÏà¹ØÉèÖÃ
-        selectType = EditorGUILayout.Popup("´ò°ü·½Ê½", selectType, Enum.GetNames(typeof(BuildBundleTools.BuildType)));
+        //æ‰“åŒ…ç›¸å…³è®¾ç½®
+        selectType = EditorGUILayout.Popup("æ‰“åŒ…æ–¹å¼", selectType, Enum.GetNames(typeof(BuildBundleTools.BuildType)));
         if (selectType != (int)BuildBundleTools._CurType)
         {
             BuildBundleTools._CurType = (BuildBundleTools.BuildType)selectType;
@@ -50,7 +54,7 @@ public class BuildBundleWindow : OdinEditorWindow
         EditorGUILayout.Space(20);
         EditorGUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        if (GUILayout.Button("¿ªÊ¼´ò°ü", new GUIStyle(GUI.skin.button)
+        if (GUILayout.Button("å¼€å§‹æ‰“åŒ…", new GUIStyle(GUI.skin.button)
         {
             fontSize = 24,
             fontStyle = FontStyle.Bold,

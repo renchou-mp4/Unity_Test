@@ -1,4 +1,4 @@
-using Managers;
+﻿using Managers;
 
 public interface ILogging
 {

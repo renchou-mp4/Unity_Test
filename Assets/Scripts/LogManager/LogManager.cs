@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+锘縰sing System.Collections.Generic;
 using Tools;
 
 namespace Managers
@@ -59,7 +59,7 @@ namespace Managers
             }
             else
             {
-                LogTools.LogWarning($"当前没有【{nameof(outputType)}】输出类型！");
+                LogTools.LogWarning($"褰撳墠娌℃湁銆恵nameof(outputType)}銆戣緭鍑虹被鍨嬶紒");
             }
         }
 

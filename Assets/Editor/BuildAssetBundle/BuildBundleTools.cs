@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 namespace Tools
 {
@@ -9,7 +9,7 @@ namespace Tools
             AssetBundle,
         }
 
-        public static string _OutputPath { get; private set; } = Application.streamingAssetsPath + "/AssetBundle";
+        public static string _OutputPath { get; private set; } = Application.streamingAssetsPath + "/Bundle";
         public static string _ManifestOutputPath { get; set; } = Application.dataPath + "/asset_version.json";
         public static string _BundlePath { get; private set; } = Application.dataPath + "/Bundle";
         public static string _ABExtension { get; } = ".ab";
@@ -38,7 +38,7 @@ namespace Tools
         }
 
         /// <summary>
-        /// »ñÈ¡ĞèÒª´ò°üµÄ×ÊÔ´ºó×º
+        /// è·å–éœ€è¦æ‰“åŒ…çš„èµ„æºåç¼€
         /// </summary>
         /// <returns></returns>
         public static string[] GetNoNeedBuildFileExtension()
@@ -50,7 +50,7 @@ namespace Tools
         }
 
         /// <summary>
-        /// »ñÈ¡°´Ä¿Â¼¹¹½¨AB°üµÄ×ÊÔ´Â·¾¶
+        /// è·å–æŒ‰ç›®å½•æ„å»ºABåŒ…çš„èµ„æºè·¯å¾„
         /// </summary>
         /// <returns></returns>
         public static string[] GetNeedBuildPathByDirectory()
@@ -62,7 +62,7 @@ namespace Tools
         }
 
         /// <summary>
-        /// »ñÈ¡°´µ¥¸öÎÄ¼ş¹¹½¨AB°üµÄ×ÊÔ´Â·¾¶
+        /// è·å–æŒ‰å•ä¸ªæ–‡ä»¶æ„å»ºABåŒ…çš„èµ„æºè·¯å¾„
         /// </summary>
         /// <returns></returns>
         public static string[] GetNeedBuildPathBySingle()
@@ -74,14 +74,14 @@ namespace Tools
         }
 
         /// <summary>
-        /// ¸ÃÂ·¾¶ÊÇ·ñÒÔÖ¸¶¨µÄAssetÂ·¾¶¿ªÍ·
+        /// è¯¥è·¯å¾„æ˜¯å¦ä»¥æŒ‡å®šçš„Assetè·¯å¾„å¼€å¤´
         /// </summary>
-        /// <param name="filePath">ÊÇ·ñÎªAsset¿ªÊ¼¶¼¿ÉÒÔ</param>
+        /// <param name="filePath">æ˜¯å¦ä¸ºAssetå¼€å§‹éƒ½å¯ä»¥</param>
         /// <param name="specifiedPath"></param>
         /// <returns></returns>
         public static bool IsStartWithSpecifiedAssetPath(string filePath, params string[] specifiedPath)
         {
-            string assetFilePath = GetAssetPath(filePath);
+            string assetFilePath = filePath.RelativeToAssetPath();
             foreach (string path in specifiedPath)
             {
                 if (assetFilePath.StartsWith(path))
@@ -90,14 +90,10 @@ namespace Tools
             return false;
         }
 
-        /// <summary>
-        /// ½«Â·¾¶±äÎªAssetÄ¿Â¼¿ªÊ¼µÄÏà¶ÔÂ·¾¶
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        public static string GetAssetPath(string filePath)
+
+        public static string GetBundleName(string path)
         {
-            return filePath.Substring(filePath.IndexOf("Asset"));
+            return path.Substring(path.IndexOf("Bundle") + 6);
         }
     }
 }

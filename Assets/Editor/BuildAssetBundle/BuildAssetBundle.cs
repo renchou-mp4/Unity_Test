@@ -17,6 +17,9 @@ public class AssetBundleInfo
     public string _md5;
 }
 
+/// <summary>
+/// JsonUtility需要封装成类才可以转Json，不能直接转list
+/// </summary>
 [System.Serializable]
 public class AssetBundleList
 {
@@ -61,11 +64,12 @@ public class BuildAssetBundle : IBuildBundle
         //处理文件
         string[] allFilesPath = Directory.GetFiles(path, "*", SearchOption.TopDirectoryOnly);
         List<string> assetNames = new(allFilesPath.Count());
+
         foreach (string filePath in allFilesPath)
         {
             if (filePath.IsEndWith(BuildBundleTools.GetNoNeedBuildFileExtension()))
                 continue;
-            assetNames.Add(BuildBundleTools.GetAssetPath(filePath.ReplacePathBackslash()));
+            assetNames.Add(filePath.ReplacePathBackslash().RelativeToAssetPath());
         }
 
         try
@@ -74,7 +78,7 @@ public class BuildAssetBundle : IBuildBundle
             {
                 _allBuild.Add(new AssetBundleBuild
                 {
-                    assetBundleName = path.GetDirectoryName() + BuildBundleTools._ABExtension,
+                    assetBundleName = BuildBundleTools.GetBundleName(path) + BuildBundleTools._ABExtension,
                     assetNames = assetNames.ToArray(),
                 });
             }
@@ -105,6 +109,7 @@ public class BuildAssetBundle : IBuildBundle
     {
         //处理文件
         string[] allFilesPath = Directory.GetFiles(path, "*", SearchOption.TopDirectoryOnly);
+
         foreach (string filePath in allFilesPath)
         {
             if (filePath.IsEndWith(BuildBundleTools.GetNoNeedBuildFileExtension()))
@@ -113,8 +118,8 @@ public class BuildAssetBundle : IBuildBundle
             {
                 _allBuild.Add(new AssetBundleBuild
                 {
-                    assetBundleName = filePath.ReplacePathBackslash().GetFileNameWithExtension() + BuildBundleTools._ABExtension,
-                    assetNames = new string[] { BuildBundleTools.GetAssetPath(filePath.ReplacePathBackslash()) },
+                    assetBundleName = BuildBundleTools.GetBundleName(filePath.ReplacePathBackslash()) + BuildBundleTools._ABExtension,
+                    assetNames = new string[] { filePath.ReplacePathBackslash().RelativeToAssetPath() },
                 });
             }
             catch
@@ -145,24 +150,21 @@ public class BuildAssetBundle : IBuildBundle
     {
         AssetBundleList assetBundleList = new();
 
-        //获取所有AB包文件
-        FileInfo[] fileInfos = new DirectoryInfo(BuildBundleTools._OutputPath).GetFiles();
-
-        HashSet<AssetBundleBuild>.Enumerator enumerator = _allBuild.GetEnumerator();
-        enumerator.MoveNext();
-        for (int i = 0; i < fileInfos.Length; i++)
+        foreach (var build in _allBuild)
         {
-            if (fileInfos[i].Name.IsEndWith(BuildBundleTools.GetNoNeedBuildFileExtension()))
+            FileInfo fileInfo = new FileInfo(BuildBundleTools._OutputPath + "/" + build.assetBundleName);
+
+            if (fileInfo.Name.IsEndWith(BuildBundleTools.GetNoNeedBuildFileExtension()))
                 continue;
             assetBundleList.AddData(new AssetBundleInfo
             {
-                _bundleName = enumerator.Current.assetBundleName,
-                _assetsName = enumerator.Current.assetNames,
-                _size = fileInfos[i].Length,
-                _md5 = EncryptionTools.EncryptionFileBySHA256(BuildBundleTools._OutputPath + "/" + enumerator.Current.assetBundleName)
+                _bundleName = build.assetBundleName,
+                _assetsName = build.assetNames,
+                _size = fileInfo.Length,
+                _md5 = EncryptionTools.EncryptionFileBySHA256(BuildBundleTools._OutputPath + "/" + build.assetBundleName)
             });
-            enumerator.MoveNext();
         }
+
         File.WriteAllText(BuildBundleTools._ManifestOutputPath, JsonUtility.ToJson(assetBundleList));
     }
 }
