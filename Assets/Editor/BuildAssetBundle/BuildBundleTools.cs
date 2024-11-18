@@ -9,8 +9,17 @@ namespace Tools
             AssetBundle,
         }
 
+        /// <summary>
+        /// AB包输出路径
+        /// </summary>
         public static string _OutputPath { get; private set; } = Application.streamingAssetsPath + "/Bundle";
+        /// <summary>
+        /// Manifest文件输出路径
+        /// </summary>
         public static string _ManifestOutputPath { get; set; } = Application.dataPath + "/asset_version.json";
+        /// <summary>
+        /// Bundle文件夹路径
+        /// </summary>
         public static string _BundlePath { get; private set; } = Application.dataPath + "/Bundle";
         public static string _ABExtension { get; } = ".ab";
 
@@ -90,7 +99,11 @@ namespace Tools
             return false;
         }
 
-
+        /// <summary>
+        /// 获取Bundle的名称
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static string GetBundleName(string path)
         {
             //7是加了/

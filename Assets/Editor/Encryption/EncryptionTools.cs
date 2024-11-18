@@ -6,6 +6,11 @@ namespace Tools
 {
     public class EncryptionTools
     {
+        /// <summary>
+        /// 获取SHA256值来验证文件
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public static string EncryptionFileBySHA256(string filePath)
         {
             using (SHA256 sha256 = SHA256.Create())

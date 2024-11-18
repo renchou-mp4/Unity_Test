@@ -7,7 +7,9 @@ using UnityEditor.Build.Pipeline;
 using UnityEditor.Build.Pipeline.Interfaces;
 using UnityEngine;
 
-
+/// <summary>
+/// AB包信息类，用于输出Manifest文件
+/// </summary>
 [System.Serializable]
 public class AssetBundleInfo
 {
@@ -33,6 +35,9 @@ public class AssetBundleList
 
 public class BuildAssetBundle : IBuildBundle
 {
+    /// <summary>
+    /// 所有要打包的AssetBundleBuild
+    /// </summary>
     private HashSet<AssetBundleBuild> _allBuild = new();
 
     public void Build()
@@ -47,18 +52,26 @@ public class BuildAssetBundle : IBuildBundle
         {
             LogTools.Log("打包完成！");
         }
+        //删除多余Log文件
         File.Delete(BuildBundleTools._OutputPath + "/buildlogtep.json");
         File.Delete(BuildBundleTools._OutputPath + "/buildlogtep.json.meta");
         GenerateBundleManifest();
     }
 
+    /// <summary>
+    /// 获取所有要构建的AssetBundleBuild信息
+    /// </summary>
+    /// <returns></returns>
     private AssetBundleBuild[] GetAssetBundleBuild()
     {
         GetBundleBuild_Directory(BuildBundleTools._BundlePath);
         return _allBuild.ToArray();
     }
 
-
+    /// <summary>
+    /// 获取按文件夹打包的AssetBundleBuild信息
+    /// </summary>
+    /// <param name="path">从该路径开始获取</param>
     private void GetBundleBuild_Directory(string path)
     {
         //处理文件
@@ -105,6 +118,10 @@ public class BuildAssetBundle : IBuildBundle
         }
     }
 
+    /// <summary>
+    /// 获取按单个文件打包的AssetBundleBuild信息
+    /// </summary>
+    /// <param name="path">从该路径开始</param>
     private void GetBundleBuild_Single(string path)
     {
         //处理文件
@@ -138,6 +155,9 @@ public class BuildAssetBundle : IBuildBundle
         }
     }
 
+    /// <summary>
+    /// 生成Manifest文件
+    /// </summary>
     private void GenerateBundleManifest()
     {
         AssetBundleList assetBundleList = new();

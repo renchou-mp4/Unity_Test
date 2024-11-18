@@ -4,6 +4,11 @@ namespace Tools
 {
     public static class PathTools
     {
+        /// <summary>
+        /// 将\\替换为/
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static string ReplacePathBackslash(this string path)
         {
             return path.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
