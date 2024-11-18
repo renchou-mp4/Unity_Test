@@ -38,7 +38,7 @@ public class BuildAssetBundle : IBuildBundle
     public void Build()
     {
         AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
+        AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
         var bundleBuildParameters = new BundleBuildParameters(BuildTarget.StandaloneWindows64, BuildTargetGroup.Standalone, BuildBundleTools._OutputPath);
         var bundleBuildContent = new BundleBuildContent(GetAssetBundleBuild());
         IBundleBuildResults results;
@@ -134,15 +134,7 @@ public class BuildAssetBundle : IBuildBundle
         foreach (string directoryPath in allDirectoriesPath)
         {
             string tmpPath = directoryPath.ReplacePathBackslash();
-            if (BuildBundleTools.IsStartWithSpecifiedAssetPath(tmpPath, BuildBundleTools.GetNeedBuildPathByDirectory()))
-            {
-                GetBundleBuild_Directory(tmpPath);
-            }
-            else
-            {
-                //默认使用单个文件构建AB包
-                GetBundleBuild_Single(tmpPath);
-            }
+            GetBundleBuild_Single(tmpPath);
         }
     }
 

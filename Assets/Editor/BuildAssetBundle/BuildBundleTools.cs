@@ -38,7 +38,7 @@ namespace Tools
         }
 
         /// <summary>
-        /// 获取需要打包的资源后缀
+        /// 获取不需要打包的资源后缀
         /// </summary>
         /// <returns></returns>
         public static string[] GetNoNeedBuildFileExtension()
@@ -93,7 +93,8 @@ namespace Tools
 
         public static string GetBundleName(string path)
         {
-            return path.Substring(path.IndexOf("Bundle") + 6);
+            //7是加了/
+            return path.Substring(path.IndexOf("Bundle") + 7);
         }
     }
 }
