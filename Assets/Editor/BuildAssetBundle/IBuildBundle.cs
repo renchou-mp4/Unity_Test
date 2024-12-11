@@ -1,4 +1,7 @@
-﻿public interface IBuildBundle
+﻿namespace Editor.BuildAssetBundle
 {
-    public abstract void Build();
+    public interface IBuildBundle
+    {
+        public void Build();
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+// ReSharper disable CheckNamespace
 
 public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
 {
@@ -8,23 +9,22 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
     {
         get
         {
+            if (_instance != null) return _instance;
+            
+            _instance = FindObjectOfType<T>();
             if (_instance == null)
             {
-                _instance = GameObject.FindObjectOfType<T>();
-                if (_instance == null)
-                {
-                    System.Type type = typeof(T);
-                    _instance = new GameObject(type.Name, type).GetComponent<T>();
-                }
-                _instance.Init();
+                System.Type type = typeof(T);
+                _instance = new GameObject(type.Name, type).GetComponent<T>();
             }
+            _instance.SingletonInit();
             return _instance;
         }
     }
 
-    protected virtual void Init() { }
+    protected virtual void SingletonInit() { }
     protected virtual void SingletonAwake() { }
-    protected virtual void SingletonDestory() { }
+    protected virtual void SingletonDestroy() { }
 
 
     private void Awake()
@@ -39,7 +39,7 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
 
     private void OnDestroy()
     {
-        SingletonDestory();
+        SingletonDestroy();
         _instance = null;
     }
 }

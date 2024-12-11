@@ -1,6 +1,4 @@
-﻿using Managers;
-
-namespace Tools
+﻿namespace Managers
 {
     public static class LogTools
     {

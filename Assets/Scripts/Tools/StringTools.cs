@@ -1,7 +1,10 @@
-public static class StringTools
+namespace Tools
 {
-    public static bool IsNullOrEmpty(this string str)
+    public static class StringTools
     {
-        return str.IsNullOrEmpty();
+        public static bool IsNullOrEmpty(this string str)
+        {
+            return string.IsNullOrEmpty(str);
+        }
     }
 }

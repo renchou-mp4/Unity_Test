@@ -1,7 +1,9 @@
-﻿using Managers;
-
-public interface ILogging
+﻿namespace Managers
 {
-    public abstract void Log(LogData logData);
-    public abstract void LogFormat(LogData logData, params object[] arguments);
+    public interface ILogging
+    {
+        public void Log(LogData logData);
+
+        public void LogFormat(LogData logData, params object[] arguments);
+    }
 }

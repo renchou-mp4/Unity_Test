@@ -1,10 +1,8 @@
-namespace GameDefineSpace
+// ReSharper disable InconsistentNaming
+namespace GameDefine
 {
-    public class GameDefine
+    public class IconPath
     {
-        public class IconPath
-        {
-            public const string Test = "Sprites/Test";
-        }
+        public const string Sprites = "Sprites";
     }
 }
