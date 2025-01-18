@@ -4,6 +4,6 @@ public class ArcherActor : BaseActor
 {
     public ArcherActor(Dictionary<string, IAction> actions) : base(actions)
     {
-        //¹­¼ýÊÖ³õÊ¼»¯
+        //ï¿½ï¿½ï¿½ï¿½ï¿½Ö³ï¿½Ê¼ï¿½ï¿½
     }
 }

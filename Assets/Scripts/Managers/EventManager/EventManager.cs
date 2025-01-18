@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Tools;
 
 namespace Managers
 {
@@ -13,7 +12,7 @@ namespace Managers
         private static readonly Dictionary<string, Dictionary<object, Dictionary<int, EventCallback>>> _eventDic = new();
 
         /// <summary>
-        /// 添加事件
+        ///     添加事件
         /// </summary>
         /// <param name="source">事件源</param>
         /// <param name="eventName">事件名称</param>
@@ -30,9 +29,9 @@ namespace Managers
                     {
                         source, new Dictionary<int, EventCallback>
                         {
-                            { eventCallback.GetHashCode(), eventCallback },
+                            { eventCallback.GetHashCode(), eventCallback }
                         }
-                    },
+                    }
                 });
                 return;
             }
@@ -43,7 +42,7 @@ namespace Managers
             {
                 _eventDic[eventName].Add(source, new Dictionary<int, EventCallback>
                 {
-                    { eventCallback.GetHashCode(), eventCallback },
+                    { eventCallback.GetHashCode(), eventCallback }
                 });
                 return;
             }
@@ -62,7 +61,7 @@ namespace Managers
         }
 
         /// <summary>
-        /// 删除事件
+        ///     删除事件
         /// </summary>
         /// <param name="source">事件源</param>
         /// <param name="eventName">事件名称</param>
@@ -84,17 +83,16 @@ namespace Managers
                 foreach (var sourceDic in _eventDic.Values)
                 {
                     foreach (var callbackDic in sourceDic.Values)
-                    {
                         //主动释放内存，在内存受限时更好
                         callbackDic.Clear();
-                    }
 
                     sourceDic.Clear();
                 }
+
                 _eventDic.Remove(eventName);
                 return;
             }
-            
+
             //事件源不为空
             //指定事件回调不为空
             if (eventCallback is not null)
@@ -121,19 +119,17 @@ namespace Managers
 
             //指定事件回调为空，移除指定事件指定事件源的所有事件回调
             foreach (var callbackDic in _eventDic[eventName].Values)
-            {
                 //主动释放内存，在内存受限时更好
                 callbackDic.Clear();
-            }
             _eventDic[eventName].Remove(source);
-            
+
             //检测该事件的事件源是为0，是则删除事件
             if (_eventDic[eventName].Count != 0) return;
             _eventDic.Remove(eventName);
         }
 
         /// <summary>
-        /// 调用事件
+        ///     调用事件
         /// </summary>
         /// <param name="source">事件源</param>
         /// <param name="eventName">事件名称</param>
@@ -148,28 +144,17 @@ namespace Managers
 
             //事件源不为空
             if (source is not null)
-            {
                 foreach (var sourceDic in _eventDic[eventName])
-                {
                     if (source == sourceDic.Key)
                     {
-                        foreach (var callbackDic in sourceDic.Value)
-                        {
-                            callbackDic.Value?.Invoke(eventCallbackArguments);
-                        }
+                        foreach (var callbackDic in sourceDic.Value) callbackDic.Value?.Invoke(eventCallbackArguments);
                         return;
                     }
-                }
-            }
-            
+
             //事件源为空
             foreach (var sourceDic in _eventDic[eventName])
-            {
-                foreach (var callbackDic in sourceDic.Value)
-                {
-                    callbackDic.Value?.Invoke(eventCallbackArguments);
-                }
-            }
+            foreach (var callbackDic in sourceDic.Value)
+                callbackDic.Value?.Invoke(eventCallbackArguments);
         }
     }
 }

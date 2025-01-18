@@ -4,8 +4,8 @@ public class SpecialAttack : IAttack
 {
     public void Execute(BaseActor actor, params object[] args)
     {
-        //ÌØÊâ¹¥»÷
+        //ï¿½ï¿½ï¿½â¹¥ï¿½ï¿½
         int damage = (int)args[0];
-        Debug.Log($"ÌØÊâ¹¥»÷£¬ÉËº¦£º{damage}");
+        Debug.Log($"ï¿½ï¿½ï¿½â¹¥ï¿½ï¿½ï¿½ï¿½ï¿½Ëºï¿½ï¿½ï¿½{damage}");
     }
 }

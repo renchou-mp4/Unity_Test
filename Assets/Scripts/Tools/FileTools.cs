@@ -6,7 +6,7 @@ namespace Tools
     public static class FileTools
     {
         /// <summary>
-        /// 获取带扩展名的文件名
+        ///     获取带扩展名的文件名
         /// </summary>
         /// <param name="filePath">文件路径</param>
         /// <returns></returns>
@@ -16,7 +16,7 @@ namespace Tools
         }
 
         /// <summary>
-        /// 获取不带扩展名的文件名
+        ///     获取不带扩展名的文件名
         /// </summary>
         /// <param name="filePath">文件路径</param>
         /// <returns></returns>
@@ -26,7 +26,7 @@ namespace Tools
         }
 
         /// <summary>
-        /// 获取文件夹名称
+        ///     获取文件夹名称
         /// </summary>
         /// <param name="directoryPath"></param>
         /// <returns></returns>
@@ -36,7 +36,7 @@ namespace Tools
         }
 
         /// <summary>
-        /// 获取扩展名
+        ///     获取扩展名
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
@@ -46,7 +46,7 @@ namespace Tools
         }
 
         /// <summary>
-        /// 文件是否是指定的扩展名
+        ///     文件是否是指定的扩展名
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="extension"></param>
@@ -55,6 +55,5 @@ namespace Tools
         {
             return extension.ToList().Contains(filePath.GetExtension());
         }
-
     }
 }

@@ -1,22 +1,16 @@
-using UnityEngine;
+using System;
+using Object = UnityEngine.Object;
 
 namespace Managers
 {
     /// <summary>
-    /// 已加载的资源信息
+    ///     已加载的资源信息
     /// </summary>
+    [Serializable]
     public class LoadedAssetInfo
     {
-        public int _RefCount;
+        public  int    _refCount;
         private Object _asset;
-        public Object _Asset
-        {
-            get
-            {
-                _RefCount++;
-                return _asset;
-            }
-            set => _asset = value;
-        }
+        public  Object _Asset { get; set; }
     }
 }

@@ -4,8 +4,8 @@ public class NormalJump : IJump
 {
     public void Execute(BaseActor actor, params object[] args)
     {
-        //ÆÕÍ¨ÌøÔ¾
+        //ï¿½ï¿½Í¨ï¿½ï¿½Ô¾
         int distance = (int)args[0];
-        Debug.Log($"ÆÕÍ¨ÌøÔ¾£º{distance}");
+        Debug.Log($"ï¿½ï¿½Í¨ï¿½ï¿½Ô¾ï¿½ï¿½{distance}");
     }
 }

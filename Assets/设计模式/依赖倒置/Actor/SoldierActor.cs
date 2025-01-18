@@ -4,6 +4,6 @@ public class SoldierActor : BaseActor
 {
     public SoldierActor(Dictionary<string, IAction> actions) : base(actions)
     {
-        //Ê¿±ø³õÊ¼»¯
+        //Ê¿ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
     }
 }

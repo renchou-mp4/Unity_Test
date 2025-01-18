@@ -1,1 +1,55 @@
-{"m_Keys":["Fonts/Font1.ab","Prefabs/TestObj.ab","Prefabs/TestObj2.ab","Sprites/Test1.ab","Sprites/Test2.ab"],"m_Values":[{"m_FileName":"C:/Unity_Test/Assets/StreamingAssets/Bundle/Fonts/Font1.ab","m_Crc":3296144733,"m_Hash":"15a922cd9dc2a1d2b80962f81fd1c9ff","m_Dependencies":[]},{"m_FileName":"C:/Unity_Test/Assets/StreamingAssets/Bundle/Prefabs/TestObj.ab","m_Crc":2195922867,"m_Hash":"60dc7de096d0865639dc5bff40626c55","m_Dependencies":["Sprites/Test1.ab","Sprites/Test2.ab"]},{"m_FileName":"C:/Unity_Test/Assets/StreamingAssets/Bundle/Prefabs/TestObj2.ab","m_Crc":2804174570,"m_Hash":"4dd72eb36368def73e84d3a68cdb246a","m_Dependencies":["Sprites/Test2.ab"]},{"m_FileName":"C:/Unity_Test/Assets/StreamingAssets/Bundle/Sprites/Test1.ab","m_Crc":3243272190,"m_Hash":"f22aca2629ab2a2e78dd8ba903679fb0","m_Dependencies":[]},{"m_FileName":"C:/Unity_Test/Assets/StreamingAssets/Bundle/Sprites/Test2.ab","m_Crc":1262076978,"m_Hash":"539e2ad1d2294c4158f4c673365011a5","m_Dependencies":[]}]}
+{
+  "m_Keys": [
+    "Fonts/Font1.ab",
+    "Prefabs/TestObj.ab",
+    "Prefabs/TestObj2 1.ab",
+    "Prefabs/TestObj2.ab",
+    "Sprites/Test1.ab",
+    "Sprites/Test2.ab"
+  ],
+  "m_Values": [
+    {
+      "m_FileName": "C:/Unity_Test/Assets/StreamingAssets/Bundle/Fonts/Font1.ab",
+      "m_Crc": 3296144733,
+      "m_Hash": "15a922cd9dc2a1d2b80962f81fd1c9ff",
+      "m_Dependencies": []
+    },
+    {
+      "m_FileName": "C:/Unity_Test/Assets/StreamingAssets/Bundle/Prefabs/TestObj.ab",
+      "m_Crc": 2557533278,
+      "m_Hash": "196ab34757f343156b5908b5b85a536c",
+      "m_Dependencies": [
+        "Sprites/Test1.ab",
+        "Sprites/Test2.ab"
+      ]
+    },
+    {
+      "m_FileName": "C:/Unity_Test/Assets/StreamingAssets/Bundle/Prefabs/TestObj2 1.ab",
+      "m_Crc": 1500343092,
+      "m_Hash": "af2a1d2ea5377d078f463321beabbc72",
+      "m_Dependencies": [
+        "Sprites/Test2.ab"
+      ]
+    },
+    {
+      "m_FileName": "C:/Unity_Test/Assets/StreamingAssets/Bundle/Prefabs/TestObj2.ab",
+      "m_Crc": 2804174570,
+      "m_Hash": "4dd72eb36368def73e84d3a68cdb246a",
+      "m_Dependencies": [
+        "Sprites/Test2.ab"
+      ]
+    },
+    {
+      "m_FileName": "C:/Unity_Test/Assets/StreamingAssets/Bundle/Sprites/Test1.ab",
+      "m_Crc": 3243272190,
+      "m_Hash": "f22aca2629ab2a2e78dd8ba903679fb0",
+      "m_Dependencies": []
+    },
+    {
+      "m_FileName": "C:/Unity_Test/Assets/StreamingAssets/Bundle/Sprites/Test2.ab",
+      "m_Crc": 1262076978,
+      "m_Hash": "539e2ad1d2294c4158f4c673365011a5",
+      "m_Dependencies": []
+    }
+  ]
+}

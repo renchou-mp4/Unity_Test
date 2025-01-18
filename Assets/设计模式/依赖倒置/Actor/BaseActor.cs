@@ -3,26 +3,23 @@ using UnityEngine;
 
 public class BaseActor
 {
-    private Dictionary<string, IAction> _actions = new();
+    private readonly Dictionary<string, IAction> _actions = new();
 
     public BaseActor(Dictionary<string, IAction> actions)
     {
-        foreach (var action in actions)
-        {
-            AddAction(action.Key, action.Value);
-        }
+        foreach (var action in actions) AddAction(action.Key, action.Value);
     }
 
     public void AddAction(string actionName, IAction action)
     {
         if (_actions.ContainsKey(actionName))
         {
-            //Êä³öerror
+            //ï¿½ï¿½ï¿½error
         }
         else
         {
             _actions.Add(actionName, action);
-            Debug.Log($"¡¾{actionName}¡¿ÒÑÌí¼Ó");
+            Debug.Log($"ï¿½ï¿½{actionName}ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
         }
     }
 
@@ -30,12 +27,11 @@ public class BaseActor
     {
         if (!_actions.ContainsKey(actionName))
         {
-            //Êä³öerror£¬Ã»ÓÐ¸Ãaction
+            //ï¿½ï¿½ï¿½errorï¿½ï¿½Ã»ï¿½Ð¸ï¿½action
         }
         else
         {
             _actions[actionName].Execute(this, args);
         }
     }
-
 }

@@ -1,4 +1,4 @@
-namespace  Managers
+namespace Managers
 {
     public struct LogData
     {

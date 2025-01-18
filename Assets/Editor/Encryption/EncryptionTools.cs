@@ -7,7 +7,7 @@ namespace Editor.Encryption
     public class EncryptionTools
     {
         /// <summary>
-        /// 获取SHA256值来验证文件
+        ///     获取SHA256值来验证文件
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
@@ -18,10 +18,7 @@ namespace Editor.Encryption
 
             byte[]        hash          = sha256.ComputeHash(fileStream);
             StringBuilder stringBuilder = new StringBuilder();
-            foreach (byte b in hash)
-            {
-                stringBuilder.Append(b.ToString("X2"));
-            }
+            foreach (byte b in hash) stringBuilder.Append(b.ToString("X2"));
 
             return stringBuilder.ToString();
         }

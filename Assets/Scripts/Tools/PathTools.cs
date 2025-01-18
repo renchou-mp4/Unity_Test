@@ -1,12 +1,15 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using System.Linq;
 
 namespace Tools
 {
+    /// <summary>
+    ///     只包含通用的路径处理方法，特定功能的路径处理放到对应的tools下
+    /// </summary>
     public static class PathTools
     {
         /// <summary>
-        /// 将\\替换为/
+        ///     将\\替换为/
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -16,7 +19,7 @@ namespace Tools
         }
 
         /// <summary>
-        /// 将\\替换为/，不包含拓展名
+        ///     将\\替换为/，不包含拓展名
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -26,24 +29,14 @@ namespace Tools
         }
 
         /// <summary>
-        /// 将路径变为Asset目录开始的相对路径
+        ///     assetPath是否以指定的路径开始
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="assetPath"></param>
+        /// <param name="speccificPaths"></param>
         /// <returns></returns>
-        public static string RelativeToAssetPath(this string path)
+        public static bool IsStartWith(string assetPath, string[] speccificPaths)
         {
-            //..语法糖
-            return path[path.IndexOf("Asset", StringComparison.Ordinal)..];
-        }
-
-        /// <summary>
-        /// 切割路径到Bundle，取Bundle后的结果
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static string RelativeToBundlePathWithoutBundle(this string path)
-        {
-            return path[(path.IndexOf("Bundle", StringComparison.Ordinal) + 7)..];//+7是因为有一个/
+            return speccificPaths.Any(assetPath.StartsWith);
         }
     }
 }

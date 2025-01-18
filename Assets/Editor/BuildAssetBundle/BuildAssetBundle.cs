@@ -11,12 +11,12 @@ using UnityEngine.Build.Pipeline;
 namespace Editor.BuildAssetBundle
 {
     /// <summary>
-    /// AB包信息类，用于输出Manifest文件
+    ///     AB包信息类，用于输出Manifest文件
     /// </summary>
     public class BuildAssetBundle : IBuildBundle
     {
         /// <summary>
-        /// 所有要打包的AssetBundleBuild
+        ///     所有要打包的AssetBundleBuild
         /// </summary>
         private readonly HashSet<AssetBundleBuild> _allBuild = new();
 
@@ -35,10 +35,12 @@ namespace Editor.BuildAssetBundle
             File.Delete(BuildBundleTools._OutputPath + "/Bundle.manifest.meta");
             File.Delete(BuildBundleTools._OutputPath + "/buildlogtep.json");
             File.Delete(BuildBundleTools._OutputPath + "/buildlogtep.json.meta");
+
+            AssetChangeTools.AssetChangeTools.UpdateAssetManifest();
         }
 
         /// <summary>
-        /// 获取打包选项
+        ///     获取打包选项
         /// </summary>
         /// <returns></returns>
         private BuildAssetBundleOptions GetBuildAssetBundleOptions()
@@ -47,7 +49,7 @@ namespace Editor.BuildAssetBundle
         }
 
         /// <summary>
-        /// 获取打包平台
+        ///     获取打包平台
         /// </summary>
         /// <returns></returns>
         private BuildTarget GetBuildTarget()
@@ -56,7 +58,7 @@ namespace Editor.BuildAssetBundle
         }
 
         /// <summary>
-        /// 获取所有要构建的AssetBundleBuild信息
+        ///     获取所有要构建的AssetBundleBuild信息
         /// </summary>
         /// <returns></returns>
         private AssetBundleBuild[] GetAssetBundleBuild()
@@ -67,20 +69,16 @@ namespace Editor.BuildAssetBundle
             {
                 string tmpFolderPath = folderPath.ReplacePathBackslash();
                 if (BuildBundleTools.IsStartWithSpecifiedAssetPath(tmpFolderPath, BuildBundleTools.GetNeedBuildPathByDirectory()))
-                {
                     GetBundleBuild_Directory(tmpFolderPath);
-                }
                 else
-                {
                     GetBundleBuild_Single(tmpFolderPath);
-                }
             }
 
             return _allBuild.ToArray();
         }
 
         /// <summary>
-        /// 获取按文件夹打包的AssetBundleBuild信息
+        ///     获取按文件夹打包的AssetBundleBuild信息
         /// </summary>
         /// <param name="folderPath">文件夹路径</param>
         private void GetBundleBuild_Directory(string folderPath)
@@ -93,15 +91,12 @@ namespace Editor.BuildAssetBundle
             try
             {
                 if (assetPaths.Length <= 0) return;
-                
-                for (int i = 0; i < assetPaths.Count(); i++)
-                {
-                    assetPaths[i] = assetPaths[i].ReplacePathBackslash().RelativeToAssetPath();
-                }
+
+                for (int i = 0; i < assetPaths.Count(); i++) assetPaths[i] = assetPaths[i].ReplacePathBackslash().RelativeToAssetPath();
                 _allBuild.Add(new AssetBundleBuild
                 {
                     assetBundleName = folderPath.RelativeToBundlePathWithoutBundle() + ExtensionTools.AB,
-                    assetNames      = assetPaths,
+                    assetNames      = assetPaths
                 });
             }
             catch
@@ -111,7 +106,7 @@ namespace Editor.BuildAssetBundle
         }
 
         /// <summary>
-        /// 获取按单个文件打包的AssetBundleBuild信息
+        ///     获取按单个文件打包的AssetBundleBuild信息
         /// </summary>
         /// <param name="folderPath">文件夹路径</param>
         private void GetBundleBuild_Single(string folderPath)
@@ -122,20 +117,18 @@ namespace Editor.BuildAssetBundle
                 .ToArray();
 
             foreach (string assetPath in assetPaths)
-            {
                 try
                 {
                     _allBuild.Add(new AssetBundleBuild
                     {
                         assetBundleName = assetPath.ReplacePathBackslashWithoutExtension().RelativeToBundlePathWithoutBundle() + ExtensionTools.AB,
-                        assetNames      = new[] { assetPath.ReplacePathBackslash().RelativeToAssetPath() },
+                        assetNames      = new[] { assetPath.ReplacePathBackslash().RelativeToAssetPath() }
                     });
                 }
                 catch
                 {
                     LogTools.Log($"存在相同BundleBuildName: 【{assetPath.ReplacePathBackslashWithoutExtension().RelativeToBundlePathWithoutBundle() + ExtensionTools.AB}】");
                 }
-            }
         }
     }
 }

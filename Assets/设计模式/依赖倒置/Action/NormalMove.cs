@@ -4,8 +4,8 @@ public class NormalMove : IMove
 {
     public void Execute(BaseActor actor, params object[] args)
     {
-        //ÆÕÍ¨ÒÆ¶¯
+        //ï¿½ï¿½Í¨ï¿½Æ¶ï¿½
         int distance = (int)args[0];
-        Debug.Log($"ÆÕÍ¨ÒÆ¶¯:{distance}");
+        Debug.Log($"ï¿½ï¿½Í¨ï¿½Æ¶ï¿½:{distance}");
     }
 }

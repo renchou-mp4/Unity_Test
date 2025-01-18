@@ -65,7 +65,7 @@ namespace Managers
         {
             Debug.LogWarningFormat($"ID:{logData._ID}---{logData._Message}", arguments);
         }
-        
+
         private static void LogErrorFormat(LogData logData, params object[] arguments)
         {
             Debug.LogErrorFormat($"ID:{logData._ID}---{logData._Message}", arguments);

@@ -9,58 +9,24 @@ public class ArcherObj : MonoBehaviour
     {
         _archerActor = new ArcherActor(new Dictionary<string, IAction>()
         {
-            {"ÆÕÍ¨¹¥»÷",new NormalAttack()},
+            { "ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½", new NormalAttack() }
         });
     }
 
     private void OnGUI()
     {
-        if (GUI.Button(new Rect(Screen.width - 200, 50, 100, 50), "Ìí¼ÓÌØÊâ¹¥»÷"))
-        {
-            _archerActor.AddAction("ÌØÊâ¹¥»÷", new SpecialAttack());
-        }
-        if (GUI.Button(new Rect(Screen.width - 200, 100, 100, 50), "Ìí¼ÓÆÕÍ¨ÒÆ¶¯"))
-        {
-            _archerActor.AddAction("ÆÕÍ¨ÒÆ¶¯", new NormalMove());
-        }
-        if (GUI.Button(new Rect(Screen.width - 200, 150, 100, 50), "Ìí¼ÓÌØÊâÒÆ¶¯"))
-        {
-            _archerActor.AddAction("ÌØÊâÒÆ¶¯", new SpecialMove());
-        }
-        if (GUI.Button(new Rect(Screen.width - 200, 200, 100, 50), "Ìí¼ÓÆÕÍ¨ÌøÔ¾"))
-        {
-            _archerActor.AddAction("ÆÕÍ¨ÌøÔ¾", new NormalJump());
-        }
-        if (GUI.Button(new Rect(Screen.width - 200, 250, 100, 50), "Ìí¼ÓÌØÊâÌøÔ¾"))
-        {
-            _archerActor.AddAction("ÌØÊâÌøÔ¾", new SpecialJump());
-        }
+        if (GUI.Button(new Rect(Screen.width - 200, 50, 100, 50), "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â¹¥ï¿½ï¿½")) _archerActor.AddAction("ï¿½ï¿½ï¿½â¹¥ï¿½ï¿½", new SpecialAttack());
+        if (GUI.Button(new Rect(Screen.width - 200, 100, 100, 50), "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½Æ¶ï¿½")) _archerActor.AddAction("ï¿½ï¿½Í¨ï¿½Æ¶ï¿½", new NormalMove());
+        if (GUI.Button(new Rect(Screen.width - 200, 150, 100, 50), "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½")) _archerActor.AddAction("ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½", new SpecialMove());
+        if (GUI.Button(new Rect(Screen.width - 200, 200, 100, 50), "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½Ô¾")) _archerActor.AddAction("ï¿½ï¿½Í¨ï¿½ï¿½Ô¾", new NormalJump());
+        if (GUI.Button(new Rect(Screen.width - 200, 250, 100, 50), "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¾")) _archerActor.AddAction("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¾", new SpecialJump());
 
 
-
-        if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 50), "Ê¹ÓÃÆÕÍ¨¹¥»÷"))
-        {
-            _archerActor.DoAction("ÆÕÍ¨¹¥»÷", 100);
-        }
-        if (GUI.Button(new Rect(Screen.width - 100, 50, 100, 50), "Ê¹ÓÃÌØÊâ¹¥»÷"))
-        {
-            _archerActor.DoAction("ÌØÊâ¹¥»÷", 200);
-        }
-        if (GUI.Button(new Rect(Screen.width - 100, 100, 100, 50), "Ê¹ÓÃÆÕÍ¨ÒÆ¶¯"))
-        {
-            _archerActor.DoAction("ÆÕÍ¨ÒÆ¶¯", 10);
-        }
-        if (GUI.Button(new Rect(Screen.width - 100, 150, 100, 50), "Ê¹ÓÃÌØÊâÒÆ¶¯"))
-        {
-            _archerActor.DoAction("ÌØÊâÒÆ¶¯", 1000);
-        }
-        if (GUI.Button(new Rect(Screen.width - 100, 200, 100, 50), "Ê¹ÓÃÆÕÍ¨ÌøÔ¾"))
-        {
-            _archerActor.DoAction("ÆÕÍ¨ÌøÔ¾", 1);
-        }
-        if (GUI.Button(new Rect(Screen.width - 100, 250, 100, 50), "Ê¹ÓÃÌØÊâÌøÔ¾"))
-        {
-            _archerActor.DoAction("ÌØÊâÌøÔ¾", 2);
-        }
+        if (GUI.Button(new Rect(Screen.width - 100, 0, 100, 50), "Ê¹ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½")) _archerActor.DoAction("ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½", 100);
+        if (GUI.Button(new Rect(Screen.width - 100, 50, 100, 50), "Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½â¹¥ï¿½ï¿½")) _archerActor.DoAction("ï¿½ï¿½ï¿½â¹¥ï¿½ï¿½", 200);
+        if (GUI.Button(new Rect(Screen.width - 100, 100, 100, 50), "Ê¹ï¿½ï¿½ï¿½ï¿½Í¨ï¿½Æ¶ï¿½")) _archerActor.DoAction("ï¿½ï¿½Í¨ï¿½Æ¶ï¿½", 10);
+        if (GUI.Button(new Rect(Screen.width - 100, 150, 100, 50), "Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½")) _archerActor.DoAction("ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½", 1000);
+        if (GUI.Button(new Rect(Screen.width - 100, 200, 100, 50), "Ê¹ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½Ô¾")) _archerActor.DoAction("ï¿½ï¿½Í¨ï¿½ï¿½Ô¾", 1);
+        if (GUI.Button(new Rect(Screen.width - 100, 250, 100, 50), "Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¾")) _archerActor.DoAction("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¾", 2);
     }
 }

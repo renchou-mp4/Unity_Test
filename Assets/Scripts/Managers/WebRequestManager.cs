@@ -4,7 +4,6 @@ namespace Managers
     {
         public static void GetWebRequestLocal()
         {
-
         }
     }
 }

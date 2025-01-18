@@ -1,0 +1,1 @@
+{"TestObj":{"_bundleName":"TestObj","_bundlePath":"Assets/Bundle/Prefabs/TestObj.prefab"},"TestObj2":{"_bundleName":"TestObj2","_bundlePath":"Assets/Bundle/Prefabs/TestObj2.prefab"}}

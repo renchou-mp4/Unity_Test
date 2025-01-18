@@ -7,9 +7,16 @@ namespace Editor.BuildAssetBundle
 {
     public class BuildBundleWindow : OdinEditorWindow
     {
+        private const int BTN_BUILD_INFO_WIDTH = 150; //构建信息文本宽度
+
+        /// <summary>
+        ///     打包方式
+        /// </summary>
+        private int _selectType;
+
         public BuildBundleWindow()
         {
-            this.titleContent = new GUIContent("打包选项窗口");
+            titleContent = new GUIContent("打包选项窗口");
         }
 
         [MenuItem("Window/BuildBundle")]
@@ -18,62 +25,49 @@ namespace Editor.BuildAssetBundle
             GetWindow<BuildBundleWindow>();
         }
 
-
-        private const int BTN_BUILD_WIDTH  = 200;   //构建按钮宽
-        private const int BTN_BUILD_HEIGHT = 50;    //构建按钮高
-        /// <summary>
-        /// 打包方式
-        /// </summary>
-        private int _selectType;
         protected override void OnImGUI()
         {
+            EditorGUILayout.BeginVertical(); //整体开始
+            EditorGUILayout.BeginVertical(new GUIStyle(GUI.skin.box)
+            {
+                padding = new RectOffset(20, 20, 20, 20),
+                normal  = { background = Texture2D.grayTexture }
+            }); //打包信息开始
             //标题
-            EditorGUILayout.Space(20);
             EditorGUILayout.LabelField("打包设置窗口", new GUIStyle
             {
                 fontSize  = 24,
                 fontStyle = FontStyle.Bold,
                 alignment = TextAnchor.MiddleCenter,
-                normal    = { textColor = Color.white },
+                normal    = { textColor = Color.white }
             });
             EditorGUILayout.Space(20);
 
             //信息展示
-            GUILayout.BeginHorizontal();
-            EditorGUILayout.TextField("Bundle文件夹路径", BuildBundleTools._BundlePath);
-            if (GUILayout.Button("打开路径", GUILayout.Width(70)))
-            {
-                System.Diagnostics.Process.Start(BuildBundleTools._BundlePath);
-            }
-            GUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Bundle文件夹路径", GUILayout.Width(BTN_BUILD_INFO_WIDTH));
+            if (GUILayout.Button(BuildBundleTools._BundlePath)) System.Diagnostics.Process.Start(BuildBundleTools._BundlePath);
+            EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space(5);
-            
-            GUILayout.BeginHorizontal();
-            EditorGUILayout.TextField("AB包输出路径", BuildBundleTools._OutputPath);
-            if (GUILayout.Button("打开路径", GUILayout.Width(70)))
-            {
-                System.Diagnostics.Process.Start(BuildBundleTools._OutputPath);
-            }
-            GUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("AB包输出路径", GUILayout.Width(BTN_BUILD_INFO_WIDTH));
+            if (GUILayout.Button(BuildBundleTools._OutputPath)) System.Diagnostics.Process.Start(BuildBundleTools._OutputPath);
+            EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space(5);
-            
-            GUILayout.BeginHorizontal();
-            EditorGUILayout.TextField("Asset_Version输出路径", BuildBundleTools._ManifestOutputPath);
-            if (GUILayout.Button("打开路径",GUILayout.Width(70)))
-            {
-                System.Diagnostics.Process.Start(BuildBundleTools._ManifestOutputPath);
-            }
-            GUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Asset_Version输出路径", GUILayout.Width(BTN_BUILD_INFO_WIDTH));
+            if (GUILayout.Button(BuildBundleTools._ManifestOutputPath)) System.Diagnostics.Process.Start(BuildBundleTools._ManifestOutputPath);
+            EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space(5);
 
             //打包相关设置
             _selectType = EditorGUILayout.Popup("打包方式", _selectType, Enum.GetNames(typeof(BuildBundleTools.BuildType)));
-            if (_selectType != (int)BuildBundleTools._CurType)
-            {
-                BuildBundleTools._CurType = (BuildBundleTools.BuildType)_selectType;
-            }
+            if (_selectType != (int)BuildBundleTools._CurType) BuildBundleTools._CurType = (BuildBundleTools.BuildType)_selectType;
 
             EditorGUILayout.Space(20);
+
             EditorGUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             if (GUILayout.Button("开始打包", new GUIStyle(GUI.skin.button)
@@ -82,17 +76,63 @@ namespace Editor.BuildAssetBundle
                     fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.MiddleCenter,
                     normal    = { textColor = Color.yellow },
-                }, GUILayout.Width(BTN_BUILD_WIDTH), GUILayout.Height(BTN_BUILD_HEIGHT)))
-            {
-                StartBuildBundle();
-            }
+                    padding   = new RectOffset(15, 15, 10, 10)
+                }))
+                BuildBundleTools.BuildBundle();
             GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
-        }
+            EditorGUILayout.EndHorizontal();
 
-        private static void StartBuildBundle()
-        {
-            BuildBundleTools.BuildBundle();
+            GUILayout.EndVertical(); //打包信息结束
+
+            //资源更改相关设置
+            EditorGUILayout.BeginVertical(new GUIStyle(GUI.skin.box)
+            {
+                padding = new RectOffset(20, 20, 20, 20),
+                normal  = { background = Texture2D.grayTexture }
+            }); //资源更改设置开始
+
+            //标题
+            EditorGUILayout.LabelField("资源检测开关", new GUIStyle
+            {
+                fontSize  = 24,
+                fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.MiddleCenter,
+                normal    = { textColor = Color.white }
+            });
+            EditorGUILayout.Space(20);
+
+            //设置按钮
+            AssetChangeTools.AssetChangeTools._AllAssetVerifyEnable = GUILayout.Toggle(AssetChangeTools.AssetChangeTools._AllAssetVerifyEnable, "全部资源检测");
+            foreach (var value in AssetChangeTools.AssetChangeTools._AssetVerifyList)
+            {
+                EditorGUILayout.Space(4);
+                value._Enable = GUILayout.Toggle(value._Enable, value._WindowName);
+            }
+
+            //AssetManifest文件路径
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("AssetManifest文件夹路径", GUILayout.Width(BTN_BUILD_INFO_WIDTH));
+            if (GUILayout.Button(AssetChangeTools.AssetChangeTools._AssetManifestPath)) System.Diagnostics.Process.Start(AssetChangeTools.AssetChangeTools._AssetManifestPath);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.Space(20);
+
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button("重置AssetManifest文件", new GUIStyle(GUI.skin.button)
+                {
+                    fontSize  = 20,
+                    fontStyle = FontStyle.Bold,
+                    alignment = TextAnchor.MiddleCenter,
+                    normal    = { textColor = Color.yellow },
+                    padding   = new RectOffset(15, 15, 10, 10)
+                }))
+                AssetChangeTools.AssetChangeTools.ResetAssetManifest();
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
+
+            GUILayout.EndVertical(); //资源更改设置结束
+
+            EditorGUILayout.EndVertical(); //整体结束
         }
     }
 }
