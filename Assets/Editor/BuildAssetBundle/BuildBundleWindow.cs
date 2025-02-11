@@ -1,5 +1,6 @@
 ﻿using System;
 using Sirenix.OdinInspector.Editor;
+using Tools;
 using UnityEditor;
 using UnityEngine;
 
@@ -25,7 +26,7 @@ namespace Editor.BuildAssetBundle
             GetWindow<BuildBundleWindow>();
         }
 
-        protected override void OnImGUI()
+        protected override void OnImGUI()//如果inspector面板出现重影，把这里改成OnGUI，编译代码后再改回来
         {
             EditorGUILayout.BeginVertical(); //整体开始
             EditorGUILayout.BeginVertical(new GUIStyle(GUI.skin.box)
@@ -112,7 +113,7 @@ namespace Editor.BuildAssetBundle
             //AssetManifest文件路径
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("AssetManifest文件夹路径", GUILayout.Width(BTN_BUILD_INFO_WIDTH));
-            if (GUILayout.Button(AssetChangeTools.AssetChangeTools._AssetManifestPath)) System.Diagnostics.Process.Start(AssetChangeTools.AssetChangeTools._AssetManifestPath);
+            if (GUILayout.Button(PathTools._AssetManifestPath)) System.Diagnostics.Process.Start(PathTools._AssetManifestPath);
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space(20);
 

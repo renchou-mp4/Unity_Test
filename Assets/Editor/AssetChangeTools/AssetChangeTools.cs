@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
+using GameDefine.DataDefine;
 using Managers;
 using Newtonsoft.Json;
+using Tools;
 using UnityEditor;
-using UnityEngine;
 
 namespace Editor.AssetChangeTools
 {
@@ -17,7 +18,7 @@ namespace Editor.AssetChangeTools
         /// <summary>
         ///     资源字典，包含项目中已导入的资源《资源名称，资源信息》
         /// </summary>
-        public static Dictionary<string, AssetManifestData> _AssetDic { get; set; } = new(); //这个静态字典在Editor下，因此在unity处于编辑器状态下会常驻内存直到unity关闭或手动清理
+        public static Dictionary<string, AssetManifestData> _AssetDic { get; private set; } = new(); //这个静态字典在Editor下，因此在unity处于编辑器状态下会常驻内存直到unity关闭或手动清理
 
         /// <summary>
         ///     资源验证列表
@@ -34,11 +35,6 @@ namespace Editor.AssetChangeTools
             }
         }
 
-        /// <summary>
-        ///     AssetManifest存放路径
-        /// </summary>
-        public static string _AssetManifestPath { get; } = Application.dataPath + "/asset_manifest.txt";
-
         private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
         {
             if (importedAssets.Length > 0)
@@ -54,6 +50,15 @@ namespace Editor.AssetChangeTools
         [InitializeOnLoadMethod] //在编译器启动或重新编译脚本后调用
         private static void Init()
         {
+#if UNITY_EDITOR
+            if (_AssetDic.Count <= 0)
+            {
+                using StreamReader reader = new StreamReader(PathTools._AssetManifestPath);
+
+                string context = reader.ReadToEnd();
+                _AssetDic = JsonConvert.DeserializeObject<Dictionary<string, AssetManifestData>>(context);
+            }
+#endif
             _AssetVerifyList.Add(new AssetVerifyPrefab());
         }
 
@@ -90,15 +95,15 @@ namespace Editor.AssetChangeTools
         /// </summary>
         public static void UpdateAssetManifest()
         {
-            if (!File.Exists(_AssetManifestPath))
+            if (!File.Exists(PathTools._AssetManifestPath))
             {
-                LogTools.Log($"不存在指定路径：{_AssetManifestPath}，创建新的文件");
-                File.Create(_AssetManifestPath).Close();
+                LogTools.Log($"不存在指定路径：{PathTools._AssetManifestPath}，创建新的文件");
+                File.Create(PathTools._AssetManifestPath).Close();
             }
 
             string context = JsonConvert.SerializeObject(_AssetDic);
 
-            using StreamWriter writer = new StreamWriter(_AssetManifestPath);
+            using StreamWriter writer = new StreamWriter(PathTools._AssetManifestPath);
             writer.Write(context);
         }
 
@@ -107,7 +112,7 @@ namespace Editor.AssetChangeTools
         /// </summary>
         public static void ResetAssetManifest()
         {
-            File.Delete(_AssetManifestPath);
+            File.Delete(PathTools._AssetManifestPath);
             _AssetDic.Clear();
             foreach (var assetVerify in _AssetVerifyList) assetVerify.ResetAssetManifest();
             UpdateAssetManifest();

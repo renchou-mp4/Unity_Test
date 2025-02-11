@@ -15,6 +15,8 @@ namespace Managers
 
         private AssetBundle _assetBundle;
 
+        public AssetBundle _AssetBundle { get; set; }
+        
         public int _RefCount
         {
             get => _refCount;
@@ -25,9 +27,7 @@ namespace Managers
                     UnloadBundle();
             }
         }
-
-        public AssetBundle _AssetBundle { get; set; }
-
+        
         /// <summary>
         ///     当前AB包已加载的资源信息
         /// </summary>

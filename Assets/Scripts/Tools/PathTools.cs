@@ -1,13 +1,21 @@
 ﻿using System.IO;
 using System.Linq;
+using UnityEngine;
 
 namespace Tools
 {
     /// <summary>
-    ///     只包含通用的路径处理方法，特定功能的路径处理放到对应的tools下
+    ///     只包含通用的路径处理方法和通用的路径，特定功能的路径处理放到对应的tools下
     /// </summary>
     public static class PathTools
     {
+        /// <summary>
+        ///     AssetManifest存放路径
+        /// </summary>
+        public static string _AssetManifestPath { get; } = Application.dataPath + "/asset_manifest.txt";
+        
+        
+        
         /// <summary>
         ///     将\\替换为/
         /// </summary>

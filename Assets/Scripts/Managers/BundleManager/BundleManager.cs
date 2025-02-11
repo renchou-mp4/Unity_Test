@@ -1,9 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using GameDefine.DataDefine;
+using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Tools;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Build.Pipeline;
+using Object = UnityEngine.Object;
 
 namespace Managers
 {
@@ -25,14 +31,32 @@ namespace Managers
         /// </summary>
         private readonly Dictionary<string, List<LoadedBundleInfo>> _loadedDependencyBundleDic = new();
 
-        private CompatibilityAssetBundleManifest _manifest;
+        /// <summary>
+        /// 资源字典，资源名和资源路径的对应《资源名称，资源信息》
+        /// </summary>
+        private Dictionary<string, AssetManifestData> _AssetDic { get; set; } = new();
 
         /// <summary>
         ///     Bundle文件夹在硬盘上的绝对路径
         /// </summary>
         private string _DiskBundlePath { get; } = Application.streamingAssetsPath + "/Bundle";
 
+        private CompatibilityAssetBundleManifest _manifest;
         private CompatibilityAssetBundleManifest _Manifest { get; set; }
+
+        public void Start()
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            using StreamReader reader = new StreamReader(PathTools._AssetManifestPath);
+
+            string context = reader.ReadToEnd();
+            _AssetDic = JsonConvert.DeserializeObject<Dictionary<string, AssetManifestData>>(context);
+            
+            stopwatch.Stop();
+            LogTools.Log($"加载prefab列表完成，用时：【{stopwatch.ElapsedMilliseconds}】毫秒");
+        }
 
         protected override void SingletonInit()
         {
@@ -140,14 +164,15 @@ namespace Managers
 
 
         /// <summary>
-        ///     使用资源名加载资源
+        ///     使用资源名加载资源，单个资源打AB的才可以缺省bundleName
         /// </summary>
         /// <typeparam name="T">资源类型</typeparam>
         /// <param name="bundleName">AB包名称</param>
         /// <param name="assetName">资源名称</param>
         /// <returns></returns>
-        public T LoadAsset<T>(string bundleName, string assetName) where T : Object
+        public T LoadAsset<T>(string assetName, string bundleName = null) where T : Object
         {
+            bundleName ??= GetBundleNameByAssetName(assetName);
             LoadedBundleInfo bundleInfo = LoadBundle(bundleName);
 
             if (bundleInfo._AssetDic.TryGetValue(assetName, out var assetInfo))
@@ -171,6 +196,11 @@ namespace Managers
         private string GetDiskBundlePath(string bundleName)
         {
             return $"{_DiskBundlePath}/{bundleName}";
+        }
+
+        private string GetBundleNameByAssetName(string assetName)
+        {
+            return _AssetDic.TryGetValue(assetName, out var assetManifestData) ? assetManifestData._bundleName : string.Empty;
         }
 
         /// <summary>
