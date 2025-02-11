@@ -1,13 +1,13 @@
 ﻿using System;
-using Sirenix.OdinInspector.Editor;
 using Tools;
 using UnityEditor;
 using UnityEngine;
 
 namespace Editor.BuildAssetBundle
 {
-    public class BuildBundleWindow : OdinEditorWindow
+    public class BuildBundleWindow : EditorWindow
     {
+        // ReSharper disable once InconsistentNaming
         private const int BTN_BUILD_INFO_WIDTH = 150; //构建信息文本宽度
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Editor.BuildAssetBundle
             GetWindow<BuildBundleWindow>();
         }
 
-        protected override void OnImGUI()//如果inspector面板出现重影，把这里改成OnGUI，编译代码后再改回来
+        protected void OnGUI()//如果inspector面板出现重影，把这里改成OnGUI，编译代码后再改回来
         {
             EditorGUILayout.BeginVertical(); //整体开始
             EditorGUILayout.BeginVertical(new GUIStyle(GUI.skin.box)
