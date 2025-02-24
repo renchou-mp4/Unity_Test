@@ -21,7 +21,7 @@ namespace Managers
         Error
     }
 
-    public class LogManager : MonoSingleton<LogManager>
+    public class LogManager : BaseManager<LogManager>
     {
         private readonly Dictionary<OutputType, ILogging> _logDic = new()
         {

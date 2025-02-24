@@ -1,6 +1,6 @@
 namespace Managers
 {
-    public class WebRequestManager : MonoSingleton<WebRequestManager>
+    public class WebRequestManager : BaseManager<WebRequestManager>
     {
         public static void GetWebRequestLocal()
         {

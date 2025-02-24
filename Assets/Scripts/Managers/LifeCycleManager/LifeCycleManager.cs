@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace Managers.LifeCycleManager
+namespace Managers
 {
-    public class LifeCycleManager : MonoSingleton<LifeCycleManager>
+    public class LifeCycleManager : BaseManager<LifeCycleManager>
     {
         private readonly List<IAwake>       _awakeList       = new List<IAwake>();
         private readonly List<IEnable>      _enableList      = new List<IEnable>();

@@ -29,16 +29,16 @@ MonoBehaviour:
       AssetTags: 
       ActiveRuleName: EnableGroup
       Collectors:
-      - CollectPath: Assets/Bundle/Sprites/Test1
-        CollectorGUID: d5899b780a58cf84ea2d51cb50785389
+      - CollectPath: Assets/Bundle/Prefabs
+        CollectorGUID: 32e0d693526ced242a87e03e57047377
         CollectorType: 0
         AddressRuleName: AddressByFileName
-        PackRuleName: PackDirectory
+        PackRuleName: PackSeparately
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
-      - CollectPath: Assets/Bundle/Sprites/Test2
-        CollectorGUID: 5337dae609cc63a479b11464f9040407
+      - CollectPath: Assets/Bundle/Sprites/Test1
+        CollectorGUID: d5899b780a58cf84ea2d51cb50785389
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory

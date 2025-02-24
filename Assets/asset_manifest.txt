@@ -1,1 +1,1 @@
-{"TestObj":{"_assetName":"TestObj","_assetPath":"Prefabs/TestObj.prefab"},"TestObj2":{"_assetName":"TestObj2","_assetPath":"Prefabs/TestObj2.prefab"}}
+{"TestObj":"Assets/Bundle/Prefabs/TestObj.prefab","TestObj2":"Assets/Bundle/Prefabs/TestObj2.prefab"}

@@ -16,9 +16,9 @@ namespace Editor.AssetChangeTools
         private static bool _allAssetVerifyEnable = true;
 
         /// <summary>
-        ///     资源字典，包含项目中已导入的资源《资源名称，资源信息》
+        ///     资源字典，包含项目中已导入的资源《资源名称，资源路径》
         /// </summary>
-        public static Dictionary<string, AssetManifestData> _AssetDic { get; private set; } = new(); //这个静态字典在Editor下，因此在unity处于编辑器状态下会常驻内存直到unity关闭或手动清理
+        public static Dictionary<string, string> _AssetDic { get; private set; } = new(); //这个静态字典在Editor下，因此在unity处于编辑器状态下会常驻内存直到unity关闭或手动清理
 
         /// <summary>
         ///     资源验证列表
@@ -56,7 +56,7 @@ namespace Editor.AssetChangeTools
                 using StreamReader reader = new StreamReader(PathTools._AssetManifestPath);
 
                 string context = reader.ReadToEnd();
-                _AssetDic = JsonConvert.DeserializeObject<Dictionary<string, AssetManifestData>>(context);
+                _AssetDic = JsonConvert.DeserializeObject<Dictionary<string, string>>(context);
             }
 #endif
             _AssetVerifyList.Add(new AssetVerifyPrefab());

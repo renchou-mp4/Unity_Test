@@ -4,7 +4,7 @@ namespace Managers
 {
     public delegate void EventCallback(params object[] args);
 
-    public class EventManager : MonoSingleton<EventManager>
+    public class EventManager : BaseManager<EventManager>
     {
         private const string GLOBAL_NAME = "Global";
 

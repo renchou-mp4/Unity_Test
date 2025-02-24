@@ -1,9 +1,7 @@
-namespace Managers.LifeCycleManager
+namespace Managers
 {
     public interface ILifeCycle
     {
-        public abstract void Register();
-        public abstract void Unregister();
     }
 
     public interface IAwake : ILifeCycle

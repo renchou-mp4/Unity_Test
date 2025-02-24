@@ -1,6 +1,5 @@
 using System.IO;
 using Editor.BuildAssetBundle;
-using GameDefine.DataDefine;
 using Managers;
 using Tools;
 using UnityEditor;
@@ -28,7 +27,7 @@ namespace Editor.AssetChangeTools
         public bool _Enable { get; set; } = true;
 
         /// <summary>
-        ///     资源导入检测
+        ///     资源导入检测，修改prefab后也会调用
         /// </summary>
         /// <param name="assetPath"></param>
         public void AssetVerifyImport(string[] assetPath)
@@ -43,10 +42,7 @@ namespace Editor.AssetChangeTools
                     continue;
 
                 string assetName = Path.GetFileNameWithoutExtension(path);
-                if (AssetChangeTools._AssetDic.TryAdd(assetName, new AssetManifestData(assetName, path.RelativeToBundlePathWithoutBundle())))
-                    continue;
-
-                LogTools.LogError($"添加资源路径失败！已有相同名字的资源：{assetName}，路径1：{path}，路径2：{AssetChangeTools._AssetDic[assetName]._bundleName}");
+                AssetChangeTools._AssetDic.TryAdd(assetName, path.RelativeToAssetPath());
             }
         }
 
@@ -95,9 +91,9 @@ namespace Editor.AssetChangeTools
                     continue;
 
                 string assetName = Path.GetFileNameWithoutExtension(assetPath);
-                if (AssetChangeTools._AssetDic.TryGetValue(assetName, out var assetManifestData))
+                if (AssetChangeTools._AssetDic.ContainsKey(assetName))
                 {
-                    assetManifestData._bundleName = movedAssets[idx];
+                    AssetChangeTools._AssetDic[assetName] = movedAssets[idx];
                     continue;
                 }
 
@@ -123,7 +119,7 @@ namespace Editor.AssetChangeTools
                     break;
                 }
 
-                if (!AssetChangeTools._AssetDic.TryAdd(assetName, new AssetManifestData(assetName, assetPath.RelativeToBundlePathWithoutBundle())))
+                if (!AssetChangeTools._AssetDic.TryAdd(assetName, assetPath.RelativeToAssetPath()))
                 {
                     LogTools.LogError($"重置AssetManifest时，添加{assetName}失败！路径：{assetPath}，类型：Prefab");
                     break;

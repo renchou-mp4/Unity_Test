@@ -6,14 +6,12 @@ using GameDefine.DataDefine;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Tools;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Build.Pipeline;
-using Object = UnityEngine.Object;
 
 namespace Managers
 {
-    public class BundleManager : MonoSingleton<BundleManager>
+    public class BundleManager : BaseManager<BundleManager>
     {
         /// <summary>
         ///     Bundle文件夹相对Assets的相对路径
@@ -31,8 +29,10 @@ namespace Managers
         /// </summary>
         private readonly Dictionary<string, List<LoadedBundleInfo>> _loadedDependencyBundleDic = new();
 
+        private CompatibilityAssetBundleManifest _manifest;
+
         /// <summary>
-        /// 资源字典，资源名和资源路径的对应《资源名称，资源信息》
+        ///     资源字典，资源名和资源路径的对应《资源名称，资源信息》
         /// </summary>
         private Dictionary<string, AssetManifestData> _AssetDic { get; set; } = new();
 
@@ -41,7 +41,6 @@ namespace Managers
         /// </summary>
         private string _DiskBundlePath { get; } = Application.streamingAssetsPath + "/Bundle";
 
-        private CompatibilityAssetBundleManifest _manifest;
         private CompatibilityAssetBundleManifest _Manifest { get; set; }
 
         public void Start()
@@ -53,7 +52,7 @@ namespace Managers
 
             string context = reader.ReadToEnd();
             _AssetDic = JsonConvert.DeserializeObject<Dictionary<string, AssetManifestData>>(context);
-            
+
             stopwatch.Stop();
             LogTools.Log($"加载prefab列表完成，用时：【{stopwatch.ElapsedMilliseconds}】毫秒");
         }
@@ -170,7 +169,7 @@ namespace Managers
         /// <param name="bundleName">AB包名称</param>
         /// <param name="assetName">资源名称</param>
         /// <returns></returns>
-        public T LoadAsset<T>(string assetName, string bundleName = null) where T : Object
+        public T LoadAsset<T>(string assetName, string bundleName = null) where T : UnityEngine.Object
         {
             bundleName ??= GetBundleNameByAssetName(assetName);
             LoadedBundleInfo bundleInfo = LoadBundle(bundleName);
@@ -208,7 +207,7 @@ namespace Managers
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        private string GetAssetExtension(System.Type type)
+        private string GetAssetExtension(Type type)
         {
             if (type == typeof(Sprite))
                 return ".png";
