@@ -1,29 +1,38 @@
 using System.Collections;
-using UI;
 using UnityEngine;
-using UnityEngine.UI;
 using YooAsset;
 
 namespace Managers
 {
     public class GameManager : MonoSingleton<GameManager>
     {
-        public  Canvas        _canvas;
-        public DialogLoading _loading;
-
-        private void Awake()
+        protected override void SingletonAwake()
         {
-            StartCoroutine(InitPackage());
+            base.SingletonAwake();
+            StartCoroutine(InitImportance());
         }
 
-        private IEnumerator InitPackage()
+        //启动重要的程序
+        private IEnumerator InitImportance()
         {
-            _loading.gameObject.SetActive(true);
-            yield return BundleManagerYooAsset._Instance.InitPackage();
-            _loading.gameObject.SetActive(false);
-            AssetHandle handle = BundleManagerYooAsset._Instance.LoadAssetAsync<GameObject>("TestObj");
-            yield return handle;
-            handle.InstantiateSync(_canvas.transform);
+            yield return StartCoroutine(InitYooAsset()) ;
+        }
+        
+        private IEnumerator InitYooAsset()
+        {
+            //初始化资源系统
+            YooAssets.Initialize();
+            yield return null;
+            //设置默认Package
+            // _package = YooAssets.CreatePackage("TestPackage");
+            // YooAssets.SetDefaultPackage(_package);
+
+            // _loading.gameObject.SetActive(true);
+            // yield return BundleManagerYooAsset._Instance.InitPackage();
+            // _loading.gameObject.SetActive(false);
+            // AssetHandle handle = BundleManagerYooAsset._Instance.LoadAssetAsync<GameObject>("TestObj");
+            // yield return handle;
+            // handle.InstantiateSync(_canvas.transform);
         }
     }
 }
