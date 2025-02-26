@@ -32,6 +32,9 @@ namespace Editor.AssetChangeTools
         /// <param name="assetPath"></param>
         public void AssetVerifyImport(string[] assetPath)
         {
+            //是否需要更新AssetManifest
+            bool needUpdate = false;
+            
             if (!_Enable) return;
             foreach (var path in assetPath)
             {
@@ -42,8 +45,16 @@ namespace Editor.AssetChangeTools
                     continue;
 
                 string assetName = Path.GetFileNameWithoutExtension(path);
-                AssetChangeTools._AssetDic.TryAdd(assetName, path.RelativeToAssetPath());
+                if(AssetChangeTools._AssetDic.TryAdd(assetName, path.RelativeToAssetPath()))
+                {
+                    needUpdate = true;
+                    continue;
+                }
+                LogTools.LogError($"资源添加或修改失败：【{assetName}】");
             }
+            
+            if (needUpdate)
+                AssetChangeTools.UpdateAssetManifest();
         }
 
         /// <summary>
@@ -52,6 +63,9 @@ namespace Editor.AssetChangeTools
         /// <param name="deletedAssets"></param>
         public void AssetVerifyDelete(string[] deletedAssets)
         {
+            //是否需要更新AssetManifest
+            bool needUpdate = false;
+            
             if (!_Enable) return;
             foreach (var assetPath in deletedAssets)
             {
@@ -65,11 +79,15 @@ namespace Editor.AssetChangeTools
                 if (AssetChangeTools._AssetDic.ContainsKey(assetName))
                 {
                     AssetChangeTools._AssetDic.Remove(assetName);
+                    needUpdate = true;
                     continue;
                 }
 
-                LogTools.LogError($"删除资源路径失败！未找到对应资源：{assetName}");
+                LogTools.LogError($"删除资源路径失败！未找到对应资源：【{assetName}】");
             }
+            
+            if (needUpdate)
+                AssetChangeTools.UpdateAssetManifest();
         }
 
         /// <summary>
@@ -79,6 +97,9 @@ namespace Editor.AssetChangeTools
         /// <param name="movedFromAssetPaths"></param>
         public void AssetVerifyMove(string[] movedAssets, string[] movedFromAssetPaths)
         {
+            //是否需要更新AssetManifest
+            bool needUpdate = false;
+            
             if (!_Enable) return;
             int idx = -1;
             foreach (var assetPath in movedFromAssetPaths)
@@ -94,11 +115,15 @@ namespace Editor.AssetChangeTools
                 if (AssetChangeTools._AssetDic.ContainsKey(assetName))
                 {
                     AssetChangeTools._AssetDic[assetName] = movedAssets[idx];
+                    needUpdate = true;
                     continue;
                 }
 
-                LogTools.LogError($"修改资源路径失败！未找到对应资源：{assetName}");
+                LogTools.LogError($"修改资源路径失败！未找到对应资源：【{assetName}】");
             }
+            
+            if (needUpdate)
+                AssetChangeTools.UpdateAssetManifest();
         }
 
         /// <summary>

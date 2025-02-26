@@ -30,22 +30,6 @@ namespace Managers
 
         public ResourcePackage _Package { get; set; }
 
-        public IEnumerator InitResourceList()
-        {
-            yield return null;
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            using var reader = new StreamReader(PathTools._AssetManifestPath);
-
-            var context = reader.ReadToEnd();
-            _AssetDic = JsonConvert.DeserializeObject<Dictionary<string, string>>(context);
-
-            stopwatch.Stop();
-            LogTools.Log($"加载prefab列表完成，用时：【{stopwatch.ElapsedMilliseconds}】毫秒");
-            yield return null;
-        }
-
         public IEnumerator InitYooAssets()
         {
             //初始化资源系统
@@ -57,8 +41,8 @@ namespace Managers
 
             //初始化Package
             yield return StartCoroutine(InitPackageOffline());
-            //初始化Package版本信息
-            yield return StartCoroutine(InitPackageVersion());
+            //初始化Package版本信息和Manifest
+            yield return StartCoroutine(InitPackageInfo());
             //初始化资源列表
             yield return StartCoroutine(InitResourceList());
 
@@ -96,23 +80,54 @@ namespace Managers
                 LogTools.LogError($"资源包初始化失败：{initOperation.Error}");
         }
 
-        private IEnumerator InitPackageVersion()
+        private IEnumerator InitPackageInfo()
         {
             //更新资源版本
             var request = _Package.RequestPackageVersionAsync();
             yield return request;
 
+            string packageVersion;
             if (request.Status == EOperationStatus.Succeed)
             {
                 //更新成功
-                var packageVersion = request.PackageVersion;
+                packageVersion = request.PackageVersion;
                 LogTools.Log($"请求Package版本成功！【{packageVersion}】");
             }
             else
             {
                 //更新失败
                 LogTools.LogError($"请求Package版本失败！{request.Error}");
+                yield break;
             }
+            
+            //更新packageManifest
+            var operation = _Package.UpdatePackageManifestAsync(packageVersion);
+            yield return operation;
+
+            if (operation.Status == EOperationStatus.Succeed)
+            {
+                LogTools.Log($"PackageManifest更新成功！");
+            }
+            else
+            {
+                LogTools.LogError($"PackageManifest更新失败！");
+            }
+        }
+        
+        private IEnumerator InitResourceList()
+        {
+            yield return null;
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            using var reader = new StreamReader(PathTools._AssetManifestPath);
+
+            var context = reader.ReadToEnd();
+            _AssetDic = JsonConvert.DeserializeObject<Dictionary<string, string>>(context);
+
+            stopwatch.Stop();
+            LogTools.Log($"加载prefab列表完成，用时：【{stopwatch.ElapsedMilliseconds}】毫秒");
+            yield return null;
         }
 
         public AssetHandle LoadAssetAsync<T>(string assetName) where T : Object

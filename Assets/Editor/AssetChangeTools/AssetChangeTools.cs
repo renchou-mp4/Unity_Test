@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using GameDefine.DataDefine;
 using Managers;
 using Newtonsoft.Json;
 using Tools;
@@ -17,6 +17,7 @@ namespace Editor.AssetChangeTools
 
         /// <summary>
         ///     资源字典，包含项目中已导入的资源《资源名称，资源路径》
+        /// editor下使用，每次修改json文件都需要读取整个文件，修改，再写回i，后期考虑使用数据库
         /// </summary>
         public static Dictionary<string, string> _AssetDic { get; private set; } = new(); //这个静态字典在Editor下，因此在unity处于编辑器状态下会常驻内存直到unity关闭或手动清理
 
@@ -95,6 +96,8 @@ namespace Editor.AssetChangeTools
         /// </summary>
         public static void UpdateAssetManifest()
         {
+            Stopwatch stopwatch = new();
+            stopwatch.Start();
             if (!File.Exists(PathTools._AssetManifestPath))
             {
                 LogTools.Log($"不存在指定路径：{PathTools._AssetManifestPath}，创建新的文件");
@@ -105,6 +108,8 @@ namespace Editor.AssetChangeTools
 
             using StreamWriter writer = new StreamWriter(PathTools._AssetManifestPath);
             writer.Write(context);
+            stopwatch.Stop();
+            LogTools.Log($"AssetManifest已更新，用时：【{stopwatch.ElapsedMilliseconds}毫秒】");
         }
 
         /// <summary>

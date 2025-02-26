@@ -1,1 +1,1 @@
-{"TestObj":"Assets/Bundle/Prefabs/TestObj.prefab","TestObj2":"Assets/Bundle/Prefabs/TestObj2.prefab"}
+{"TestObj":"Assets/Bundle/Prefabs/TestObj.prefab","TestObj2":"Assets/Bundle/Prefabs/TestObj2.prefab","DialogLoading":"Assets/Bundle/Prefabs/DialogLoading.prefab"}
