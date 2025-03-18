@@ -141,5 +141,17 @@ namespace Managers
             LogTools.LogError($"Manifest中不包含【{assetName}】资源！");
             return null;
         }
+        
+        public AssetHandle LoadAssetSync<T>(string assetName) where T : Object
+        {
+            if (_AssetDic.TryGetValue(assetName, out var value))
+            {
+                var handle = _Package.LoadAssetSync<T>(value);
+                return handle;
+            }
+
+            LogTools.LogError($"Manifest中不包含【{assetName}】资源！");
+            return null;
+        }
     }
 }

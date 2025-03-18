@@ -1,19 +1,23 @@
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using Managers;
+using Tools;
 using UnityEngine;
 
 public class UIManager : MonoSingleton<UIManager>
 {
     //各层级已打开的UI缓存
-    private Dictionary<string, UIBase> _dialogCache = new();
-    private Dictionary<string, UIBase> _popupCache = new();
+    //private static Dictionary<UILayer, > _openedUICache = new();
     
     private UIAnimManager _uiAnimManager = new();
 
-    public static TUILayer OpenUI<TUILayer>() where TUILayer : UIBase
+    public static T OpenUI<T>(string prefabName,UILayer layer) where T : UIBase
     {
+        if(prefabName.IsNullOrEmpty())
+            prefabName = typeof(T).Name;
         
+        //BundleManagerYooAsset._Instance.LoadAssetSync<T>()
         return null;
     }
 
