@@ -5,11 +5,17 @@ namespace Managers
     //UI生命周期管理
     public class UIBase : MonoBehaviour
     {
-        protected virtual void OnUIInit(){}
-        protected virtual void OnUIDestroy(){}
-        protected virtual void OnUIOpen(){}
-        protected virtual void OnUIClose(){}
-        protected virtual void OnUIShow(){}
-        protected virtual void OnUIHide(){}
+        /// <summary>
+        /// UI层级
+        /// </summary>
+        public UILayer _Layer { get; set; }
+        
+        //UI行为管理
+        public virtual void OnUIInit(object[] initArguments)    {}
+        public virtual    void OnUIDestroy() {}
+        public virtual    void OnUIOpen()    {}
+        public virtual    void OnUIClose()   {}
+        public virtual    void OnUIShow()    {}
+        public virtual    void OnUIHide()    {}
     }
 }

@@ -21,7 +21,7 @@ namespace Managers
         WebPlayMode
     }
 
-    public class BundleManagerYooAsset : MonoSingleton<BundleManagerYooAsset>
+    public class BundleManagerYooAsset : BaseManager<BundleManagerYooAsset>
     {
         /// <summary>
         ///     资源字典，资源名和资源路径的对应《资源名称，资源信息》
@@ -45,21 +45,6 @@ namespace Managers
             yield return StartCoroutine(InitPackageInfo());
             //初始化资源列表
             yield return StartCoroutine(InitResourceList());
-
-            
-            //
-            // //更新资源清单
-            // var operation2 = _Package.UpdatePackageManifestAsync(packageVersion);
-            // yield return operation2;
-            //
-            // if (operation2.Status == EOperationStatus.Succeed)
-            //     //更新成功
-            //     LogTools.Log("资源更新成功！");
-            // else
-            //     //更新失败
-            //     LogTools.LogError(operation2.Error);
-
-            
         }
 
         private IEnumerator InitPackageOffline()

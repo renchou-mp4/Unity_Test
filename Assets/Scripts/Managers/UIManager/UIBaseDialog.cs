@@ -1,6 +1,6 @@
 namespace Managers
 {
-    public class UIBaseDialog
+    public class UIBaseDialog : UIBase
     {
         
     }

@@ -6,36 +6,36 @@ namespace Managers
 
     public interface IAwake : ILifeCycle
     {
-        public abstract void OnAwake();
+        public void OnAwake();
     }
 
     public interface IEnable : ILifeCycle
     {
-        public abstract void OnEnable();
+        public void OnEnable();
     }
 
     public interface IStart : ILifeCycle
     {
-        public abstract void OnStart();
+        public void OnStart();
     }
 
     public interface IUpdate : ILifeCycle
     {
-        public abstract void OnUpdate();
+        public void OnUpdate();
     }
 
     public interface IFixedUpdate : ILifeCycle
     {
-        public abstract void OnFixedUpdate();
+        public void OnFixedUpdate();
     }
 
     public interface IDisable : ILifeCycle
     {
-        public abstract void OnDisable();
+        public void OnDisable();
     }
 
     public interface IDestroy : ILifeCycle
     {
-        public abstract void OnDestroy();
+        public void OnDestroy();
     }
 }

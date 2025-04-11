@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b05c83971e3dca94f9fa460d396385e5, type: 3}
+  m_Name: BuildinCatalog
+  m_EditorClassIdentifier: 
+  PackageName: TestPackage
+  PackageVersion: 2025-03-31-1300
+  Wrappers:
+  - BundleGUID: 0b68492b098d10aa46a4cbf9b21c1156
+    FileName: assets_bundle_prefabs_dialogloading.bundle
+  - BundleGUID: 8c406f54941e618e6ebdbf3e9096166c
+    FileName: assets_bundle_prefabs_testobj.bundle
+  - BundleGUID: 5b351f3af03c92a4e47632316c238356
+    FileName: assets_bundle_prefabs_testobj2.bundle
+  - BundleGUID: 44169a4af965f4aa67108d50757b5bfa
+    FileName: assets_bundle_sprites_test1.bundle
+  - BundleGUID: eb860ca743c4b6566f3805d66fbf8a10
+    FileName: share_assets_bundle_sprites.bundle
+  - BundleGUID: 9421262a8c9c5a987e6ffefc0e6865e0
+    FileName: share_assets_bundle_sprites_test2.bundle
