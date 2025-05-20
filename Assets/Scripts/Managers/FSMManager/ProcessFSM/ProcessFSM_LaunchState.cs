@@ -6,13 +6,13 @@ namespace Managers
 {
     [ProcessState(ProcessFSMState.Launch)]
     // ReSharper disable once InconsistentNaming
-    public class ProcessFSM_LaunchState : IState<ProcessFSMState>
+    public class ProcessFSM_LaunchState :MonoBehaviour, IState<ProcessFSMState>
     {
         public ProcessFSMState _State { get; set; } = ProcessFSMState.Launch;
 
         public void OnEnterState()
         {
-            
+            StartCoroutine(InitImportance());
         }
 
         public void OnUpdateState()

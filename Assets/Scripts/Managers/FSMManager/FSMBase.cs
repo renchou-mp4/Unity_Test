@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Managers
 {
     // ReSharper disable once InconsistentNaming
-    public abstract class FSMBase<TState> :Component,IUpdate,IDestroy where TState : Enum
+    public abstract class FSMBase<TState> : Component,IUpdate,IDestroy where TState : Enum
     {
         protected FSMBase()
         {

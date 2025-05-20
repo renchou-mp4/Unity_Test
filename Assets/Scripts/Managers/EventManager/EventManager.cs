@@ -1,160 +1,156 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Managers
 {
-    public delegate void EventCallback(params object[] args);
+    public struct EventBody : IEquatable<EventBody>
+    {
+        public int _HashCode {get;set;}
+        public string _EventDesc { get; set; }
+        public Delegate _EventDelegate { get; set; }
 
+        public EventBody(string eventDesc, Delegate eventDelegate)
+        {
+            _HashCode = eventDelegate.GetHashCode();
+            _EventDesc = eventDesc;
+            _EventDelegate = eventDelegate;
+        }
+
+        public bool Equals(EventBody other)
+        {
+            return _HashCode == other._HashCode;
+        }
+    }
+    
     public class EventManager : BaseManager<EventManager>
     {
-        private const string GLOBAL_NAME = "Global";
-
-        //<事件名,<事件源,<回调方法哈希值，回调方法>>>
-        private static readonly Dictionary<string, Dictionary<object, Dictionary<int, EventCallback>>> _eventDic = new();
+        //<事件ID，事件体>
+        private static readonly Dictionary<int, List<EventBody>> _eventDic = new();
 
         /// <summary>
-        ///     添加事件
+        /// 添加事件
         /// </summary>
-        /// <param name="source">事件源</param>
-        /// <param name="eventName">事件名称</param>
-        /// <param name="eventCallback">事件回调</param>
-        public static void AddEvent(object source, string eventName, EventCallback eventCallback)
+        /// <param name="eventID">事件ID</param>
+        /// <param name="eventBody">事件体</param>
+        public static void AddEvent(int eventID, EventBody eventBody)
         {
-            source ??= GLOBAL_NAME;
-
             //不包含该事件
-            if (!_eventDic.ContainsKey(eventName))
+            if (!_eventDic.TryGetValue(eventID, out var list))
             {
-                _eventDic.Add(eventName, new Dictionary<object, Dictionary<int, EventCallback>>
-                {
-                    {
-                        source, new Dictionary<int, EventCallback>
-                        {
-                            { eventCallback.GetHashCode(), eventCallback }
-                        }
-                    }
-                });
+                _eventDic.Add(eventID, new List<EventBody>(){eventBody});
                 return;
             }
 
             //已包含该事件
-            //不包含该事件源
-            if (_eventDic[eventName].ContainsKey(source))
+            //包含该事件回调
+            if (list.Any(body => body._HashCode == eventBody._HashCode))
             {
-                _eventDic[eventName].Add(source, new Dictionary<int, EventCallback>
-                {
-                    { eventCallback.GetHashCode(), eventCallback }
-                });
+                LogTools.LogError($"事件ID：【{eventID}】--- 当前方法【{eventBody._EventDelegate.Method.Name}】已注册！描述：{eventBody._EventDesc}");
                 return;
             }
 
-            //已包含该事件源
             //不包含该事件回调
-            int hashCode = eventCallback.GetHashCode();
-            if (!_eventDic[eventName][source].ContainsKey(hashCode))
-            {
-                _eventDic[eventName][source].Add(hashCode, eventCallback);
-                return;
-            }
-
-            //已包含该事件回调
-            LogTools.LogError($"【{eventName}】事件---【{source}】源：当前方法【{eventCallback.Method.Name}】已注册！");
+            _eventDic[eventID].Add(eventBody);
         }
 
         /// <summary>
-        ///     删除事件
+        /// 删除事件
         /// </summary>
-        /// <param name="source">事件源</param>
-        /// <param name="eventName">事件名称</param>
-        /// <param name="eventCallback">事件回调</param>
-        public static void RemoveEvent(object source, string eventName, EventCallback eventCallback = null)
+        /// <param name="eventID">事件ID</param>
+        /// <param name="eventBody">事件体</param>
+        public static void RemoveEvent(int eventID, EventBody eventBody)
         {
-            eventName ??= GLOBAL_NAME;
-
-            if (!_eventDic.ContainsKey(eventName))
+            if (!_eventDic.TryGetValue(eventID,out var list))
             {
-                LogTools.LogError($"移除失败，【{eventName}】事件没有注册！");
+                LogTools.LogError($"移除失败，【{eventID}】事件没有注册！");
                 return;
             }
 
-            //事件源为空
-            if (source == null)
+            if (list.All(body => body._HashCode != eventBody._HashCode))
             {
-                //移除指定事件所有事件源
-                foreach (var sourceDic in _eventDic.Values)
-                {
-                    foreach (var callbackDic in sourceDic.Values)
-                        //主动释放内存，在内存受限时更好
-                        callbackDic.Clear();
-
-                    sourceDic.Clear();
-                }
-
-                _eventDic.Remove(eventName);
+                LogTools.LogError($"移除失败，【{eventID}】事件没有注册! 当前方法【{eventBody._EventDelegate.Method.Name}】已注册！描述：{eventBody._EventDesc}");
                 return;
             }
-
-            //事件源不为空
-            //指定事件回调不为空
-            if (eventCallback is not null)
-            {
-                //移除指定事件指定事件源的指定事件回调
-                int hashCode = eventCallback.GetHashCode();
-
-                if (!_eventDic[eventName][source].ContainsKey(hashCode))
-                {
-                    LogTools.LogError($"移除失败，【{eventName}】事件---【{source}】源：当前方法【{eventCallback.Method.Name}】没有注册！");
-                    return;
-                }
-
-                _eventDic[eventName][source].Remove(hashCode);
-
-                //检测该事件及事件源是否已没有事件回调，没有则删除
-                if (_eventDic[eventName][source].Count != 0) return;
-                _eventDic[eventName].Remove(source);
-                if (_eventDic[eventName].Count != 0) return;
-                _eventDic.Remove(eventName);
-
-                return;
-            }
-
-            //指定事件回调为空，移除指定事件指定事件源的所有事件回调
-            foreach (var callbackDic in _eventDic[eventName].Values)
-                //主动释放内存，在内存受限时更好
-                callbackDic.Clear();
-            _eventDic[eventName].Remove(source);
-
-            //检测该事件的事件源是为0，是则删除事件
-            if (_eventDic[eventName].Count != 0) return;
-            _eventDic.Remove(eventName);
+            
+            list.Remove(eventBody);
+            
+            //检测该事件及事件源是否已没有事件回调，没有则删除
+            if (_eventDic[eventID].Count != 0) return;
+            _eventDic.Remove(eventID);
         }
 
         /// <summary>
-        ///     调用事件
+        /// 调用事件
         /// </summary>
-        /// <param name="source">事件源</param>
-        /// <param name="eventName">事件名称</param>
-        /// <param name="eventCallbackArguments">事件回调参数</param>
-        public static void DispatchEvent(object source, string eventName, params object[] eventCallbackArguments)
+        /// <param name="eventID">事件ID</param>
+        public static void DispatchEvent(int eventID)
         {
-            if (!_eventDic.ContainsKey(eventName))
+            if (!_eventDic.TryGetValue(eventID,out var list))
             {
-                LogTools.LogError($"调用失败，【{eventName}】事件没有注册！");
+                LogTools.LogError($"调用失败，【{eventID}】事件没有注册！");
                 return;
             }
 
-            //事件源不为空
-            if (source is not null)
-                foreach (var sourceDic in _eventDic[eventName])
-                    if (source == sourceDic.Key)
-                    {
-                        foreach (var callbackDic in sourceDic.Value) callbackDic.Value?.Invoke(eventCallbackArguments);
-                        return;
-                    }
-
-            //事件源为空
-            foreach (var sourceDic in _eventDic[eventName])
-            foreach (var callbackDic in sourceDic.Value)
-                callbackDic.Value?.Invoke(eventCallbackArguments);
+            foreach (var body in list)
+                body._EventDelegate.DynamicInvoke();
         }
+        public static void DispatchEvent<T>(int eventID,T data)
+        {
+            if (!_eventDic.TryGetValue(eventID,out var list))
+            {
+                LogTools.LogError($"调用失败，【{eventID}】事件没有注册！");
+                return;
+            }
+
+            foreach (var body in list)
+                body._EventDelegate.DynamicInvoke(data);
+        }
+        public static void DispatchEvent<T1,T2>(int eventID,T1 data1,T2 data2)
+        {
+            if (!_eventDic.TryGetValue(eventID,out var list))
+            {
+                LogTools.LogError($"调用失败，【{eventID}】事件没有注册！");
+                return;
+            }
+
+            foreach (var body in list)
+                body._EventDelegate.DynamicInvoke(data1,data2);
+        }
+        public static void DispatchEvent<T1,T2,T3>(int eventID,T1 data1,T2 data2,T3 data3)
+        {
+            if (!_eventDic.TryGetValue(eventID,out var list))
+            {
+                LogTools.LogError($"调用失败，【{eventID}】事件没有注册！");
+                return;
+            }
+
+            foreach (var body in list)
+                body._EventDelegate.DynamicInvoke(data1,data2,data3);
+        }
+        public static void DispatchEvent<T1,T2,T3,T4>(int eventID,T1 data1,T2 data2,T3 data3,T4 data4)
+        {
+            if (!_eventDic.TryGetValue(eventID,out var list))
+            {
+                LogTools.LogError($"调用失败，【{eventID}】事件没有注册！");
+                return;
+            }
+
+            foreach (var body in list)
+                body._EventDelegate.DynamicInvoke(data1,data2,data3,data4);
+        }
+        public static void DispatchEvent<T1,T2,T3,T4,T5>(int eventID,T1 data1,T2 data2,T3 data3,T4 data4,T5 data5)
+        {
+            if (!_eventDic.TryGetValue(eventID,out var list))
+            {
+                LogTools.LogError($"调用失败，【{eventID}】事件没有注册！");
+                return;
+            }
+
+            foreach (var body in list)
+                body._EventDelegate.DynamicInvoke(data1,data2,data3,data4,data5);
+        }
+        
+        //TODO:延时调用
     }
 }

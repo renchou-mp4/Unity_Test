@@ -10,14 +10,7 @@ namespace Managers
     {
         public FSMManager()
         {
-            GameObject obj = new GameObject("FSM")
-            {
-                transform =
-                {
-                    parent = transform
-                }
-            };
-            
+            GameObject obj = new GameObject("FSM");
             obj.AddComponent<ProcessFSM>();
         }
     }
